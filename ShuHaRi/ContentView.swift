@@ -71,7 +71,7 @@ struct SettingsView: View {
 
     var body: some View {
         Form {
-            Section(header: Text("言語設定")) {
+            Section(header: Text("Language")) {
                 Picker("言語", selection: $selectedLanguage) {
                     ForEach(languages, id: \ .self) { language in
                         Text(language).tag(language)
@@ -80,7 +80,7 @@ struct SettingsView: View {
                 .pickerStyle(SegmentedPickerStyle())
             }
         }
-        .navigationTitle("設定")
+        .navigationTitle("Setting")
     }
 }
 
