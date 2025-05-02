@@ -2,10 +2,23 @@ import SwiftUI
 
 // グローバル配列
 let exhibits = [
-    Exhibit(name: "🐧Republic of Penguins", exhibitor: "Yuki Yotsumoto", description: "", tag1: "", tag2: "", tag3: "", imageName: ""),
+    Exhibit(name: "🐧Republic of Penguins", exhibitor: "Yuki Yotsumoto", description: "", tag1: "", tag2: "", tag3: "", imageName: "", startTime: ""),
     // Takibi tales
-    Exhibit(name: "Takibi tales", exhibitor: "Sara Kimura", description: "The ancient art of storytelling comes alive again. Just as a grandmother once whispered legends by the takibi - bonfire, I'll be sharing a tale from the rich tapestry of Japanese mythology.", tag1: "oneness", tag2: "storytelling", tag3: "sense of wonder", imageName: "5_takibi_tales")
+    Exhibit(name: "Takibi tales", exhibitor: "Sara Kimura", description: "The ancient art of storytelling comes alive again. Just as a grandmother once whispered legends by the takibi - bonfire, I'll be sharing a tale from the rich tapestry of Japanese mythology.", tag1: "oneness", tag2: "storytelling", tag3: "sense of wonder", imageName: "5_takibi_tales", startTime: "15:00")
 ]
+
+// 出展の情報はここで型を作る
+struct Exhibit: Identifiable {
+    var id = UUID()
+    var name: String
+    var exhibitor: String
+    var description: String
+    var tag1: String
+    var tag2: String
+    var tag3: String
+    var imageName: String // アセット名を指定
+    var startTime: String
+}
 
 struct ContentView: View {
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "日本語"
@@ -17,13 +30,13 @@ struct ContentView: View {
             } else {
                 // 検索結果制御
                 return exhibits.filter {
-                            $0.name.localizedCaseInsensitiveContains(searchText) ||
-                            $0.exhibitor.localizedCaseInsensitiveContains(searchText) ||
-                            $0.description.localizedCaseInsensitiveContains(searchText) ||
-                            $0.tag1.localizedCaseInsensitiveContains(searchText) ||
-                            $0.tag2.localizedCaseInsensitiveContains(searchText) ||
-                            $0.tag3.localizedCaseInsensitiveContains(searchText)
-                        }
+                    $0.name.localizedCaseInsensitiveContains(searchText) ||
+                    $0.exhibitor.localizedCaseInsensitiveContains(searchText) ||
+                    $0.description.localizedCaseInsensitiveContains(searchText) ||
+                    $0.tag1.localizedCaseInsensitiveContains(searchText) ||
+                    $0.tag2.localizedCaseInsensitiveContains(searchText) ||
+                    $0.tag3.localizedCaseInsensitiveContains(searchText)
+                }
             }
         }
 
@@ -56,12 +69,15 @@ struct ContentView: View {
                                 .clipped()
                                 .cornerRadius(8)
                             VStack(alignment: .leading) {
+                                // タイトルとしてみえるもの
                                 Text(exhibit.name)
                                     .font(.headline)
+                                // サブタイトル（灰色字）としてみえるもの
                                 Text(exhibit.exhibitor)
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
-                                
+                                Text(exhibit.startTime)
+                                    .foregroundColor(colorForTime(exhibit.startTime)) // 色を変更するよう設定しているが、そもそも表示の順序を下にするなどif文で制御したほうがいいかも
                             }
                             
                         }
@@ -97,6 +113,36 @@ struct ContentView: View {
         .onChange(of: selectedLanguage) { print("Selected language changed to: \(selectedLanguage)") }
     }
     
+    // 色変更関数
+    func colorForTime(_ startTime: String) -> Color {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm"
+        
+        guard let eventTime = formatter.date(from: startTime) else {
+            return .primary // 変換できなければデフォルト色
+        }
+
+        // 現在時刻と比較（同じ日付として処理）
+        let calendar = Calendar.current
+
+        let now = Date()
+        let nowComponents = calendar.dateComponents([.hour, .minute], from: now)
+        let eventComponents = calendar.dateComponents([.hour, .minute], from: eventTime)
+
+        if let nowHour = nowComponents.hour,
+           let nowMinute = nowComponents.minute,
+           let eventHour = eventComponents.hour,
+           let eventMinute = eventComponents.minute {
+
+            if (eventHour < nowHour) || (eventHour == nowHour && eventMinute < nowMinute) {
+                return .red // 過ぎている
+            } else {
+                return .green // まだ来ていない
+            }
+        }
+        return .primary
+    }
+
     // 言語対応は全てここに格納可能。
     // 使い方：　Text(localizedString("Tickets"))
     // Ticketsのようにキーを設定した配列である。
@@ -130,18 +176,6 @@ struct SettingsView: View {
         }
         .navigationTitle("Setting")
     }
-}
-
-// 出展の情報はここで型を作る
-struct Exhibit: Identifiable {
-    var id = UUID()
-    var name: String
-    var exhibitor: String
-    var description: String
-    var tag1: String
-    var tag2: String
-    var tag3: String
-    var imageName: String // アセット名を指定
 }
 
 // 出展ページの遷移先・詳細
@@ -188,6 +222,7 @@ struct ExhibitDetailView: View {
         }
     }
 }
+
 
 #Preview {
     ContentView()
