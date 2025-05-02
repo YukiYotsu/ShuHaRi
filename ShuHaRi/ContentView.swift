@@ -1,14 +1,7 @@
 import SwiftUI
 
-// グローバル配列
-let exhibits = [
-    Exhibit(name: "🐧Republic of Penguins", exhibitor: "Yuki Yotsumoto", description: "", tag1: "", tag2: "", tag3: "", imageName: "", startTime: ""),
-    // Takibi tales
-    Exhibit(name: "Takibi tales", exhibitor: "Sara Kimura", description: "The ancient art of storytelling comes alive again. Just as a grandmother once whispered legends by the takibi - bonfire, I'll be sharing a tale from the rich tapestry of Japanese mythology.", tag1: "oneness", tag2: "storytelling", tag3: "sense of wonder", imageName: "5_takibi_tales", startTime: "15:00")
-]
-
 // 出展の情報はここで型を作る
-struct Exhibit: Identifiable {
+struct Exhibit: Identifiable { // Identifiableにより配列にIDを振ることができる
     var id = UUID()
     var name: String
     var exhibitor: String
@@ -18,8 +11,17 @@ struct Exhibit: Identifiable {
     var tag3: String
     var imageName: String // アセット名を指定
     var startTime: String
+    var isNotified: Bool = false // 通知フラグデフォルト・偽
 }
 
+// グローバル配列
+let exhibits = [
+    Exhibit(name: "🐧Republic of Penguins", exhibitor: "Yuki Yotsumoto", description: "", tag1: "", tag2: "", tag3: "", imageName: "", startTime: ""),
+    // Takibi tales
+    Exhibit(name: "Takibi tales", exhibitor: "Sara Kimura", description: "The ancient art of storytelling comes alive again. Just as a grandmother once whispered legends by the takibi - bonfire, I'll be sharing a tale from the rich tapestry of Japanese mythology.", tag1: "oneness", tag2: "storytelling", tag3: "sense of wonder", imageName: "5_takibi_tales", startTime: "14:30")
+]
+
+// ContentView本体
 struct ContentView: View {
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "日本語"
     @State private var searchText: String = ""
@@ -76,8 +78,10 @@ struct ContentView: View {
                                 Text(exhibit.exhibitor)
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
-                                Text(exhibit.startTime)
-                                    .foregroundColor(colorForTime(exhibit.startTime)) // 色を変更するよう設定しているが、そもそも表示の順序を下にするなどif文で制御したほうがいいかも
+                                if !exhibit.startTime.isEmpty {
+                                    Text(exhibit.startTime)
+                                        .foregroundColor(colorForTime(exhibit.startTime)) //色を変更するよう設定しているが、そもそも表示の順序を下にするなどif文で制御したほうがいいかも
+                                }
                             }
                             
                         }
@@ -111,6 +115,23 @@ struct ContentView: View {
             }
         }
         .onChange(of: selectedLanguage) { print("Selected language changed to: \(selectedLanguage)") }
+        .onAppear {
+            requestNotificationPermission()
+        }
+    }
+    // 言語対応は全てここに格納可能。
+    // 使い方：　Text(localizedString("Tickets"))
+    // Ticketsのようにキーを設定した配列である。
+    func localizedString(_ key: String) -> String {
+        switch selectedLanguage {
+        case "🇯🇵日本語":
+            return ["Program": "プログラム", "Home": "ホーム", "Browse": "見つける", "Search exhibits": "出展を検索する", "Notifications": "通知設定"][key] ?? key
+        case "🇩🇪Deutsch":
+            return ["Program": "Programm", "Home": "Startseite", "Browse": "Durchsuchen", "Search exhibits": "Exponate suchen", "Notifications": "Benachrichtigungen"][key] ?? key
+        // それ以外はそのキーのまま返す
+        default:
+            return key
+        }
     }
     
     // 色変更関数
@@ -142,25 +163,20 @@ struct ContentView: View {
         }
         return .primary
     }
-
-    // 言語対応は全てここに格納可能。
-    // 使い方：　Text(localizedString("Tickets"))
-    // Ticketsのようにキーを設定した配列である。
-    func localizedString(_ key: String) -> String {
-        switch selectedLanguage {
-        case "🇯🇵日本語":
-            return ["Program": "プログラム", "Home": "ホーム", "Browse": "見つける", "Search exhibits": "出展を検索する"][key] ?? key
-        case "🇩🇪Deutsch":
-            return ["Program": "Programm", "Home": "Startseite", "Browse": "Durchsuchen", "Search exhibits": "Exponate suchen"][key] ?? key
-        // それ以外はそのキーのまま返す
-        default:
-            return key
+    
+    func requestNotificationPermission() {
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
+            if let error = error {
+                print("Notification permission error: \(error.localizedDescription)")
+            }
         }
     }
+
 }
 
 struct SettingsView: View {
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "日本語"
+    @State private var notifiedExhibitIDs: Set<UUID> = []
     let languages = ["🇯🇵日本語", "🇩🇪Deutsch", "🇬🇧English"]
 
     var body: some View {
@@ -173,9 +189,38 @@ struct SettingsView: View {
                 }
                 .pickerStyle(SegmentedPickerStyle())
             }
+            
+            // 出展の通知設定
+            // 出展の通知設定
+            Section(header: Text("Notifications")) {
+                List(exhibits) { exhibit in
+                    Toggle(isOn: Binding(
+                        get: { notifiedExhibitIDs.contains(exhibit.id) },
+                        set: { isOn in
+                            if isOn {
+                                notifiedExhibitIDs.insert(exhibit.id)
+                                scheduleNotification(for: exhibit)
+                            } else {
+                                notifiedExhibitIDs.remove(exhibit.id)
+                                removeScheduledNotification(for: exhibit)
+                            }
+                        }
+                    )) {
+                        Text(exhibit.name)
+                    }
+                }
+            }
+
         }
         .navigationTitle("Setting")
+        
     }
+    
+    func removeScheduledNotification(for exhibit: Exhibit) {
+        UNUserNotificationCenter.current()
+            .removePendingNotificationRequests(withIdentifiers: [exhibit.id.uuidString])
+    }
+
 }
 
 // 出展ページの遷移先・詳細
@@ -221,6 +266,48 @@ struct ExhibitDetailView: View {
             .navigationBarTitleDisplayMode(.inline)
         }
     }
+}
+
+func scheduleNotification(for exhibit: Exhibit) {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "HH:mm"
+    
+    guard let eventTime = formatter.date(from: exhibit.startTime) else { return }
+
+    // 今日の日付に時刻を組み合わせる
+    let calendar = Calendar.current
+    let now = Date()
+    var components = calendar.dateComponents([.year, .month, .day], from: now)
+    let eventComponents = calendar.dateComponents([.hour, .minute], from: eventTime)
+    components.hour = eventComponents.hour
+    components.minute = eventComponents.minute
+
+    guard let eventDate = calendar.date(from: components) else { return }
+    let notificationDate = eventDate.addingTimeInterval(-600) // 10分前
+
+    if notificationDate < now {
+        return // 過去の通知はスキップ
+    }
+
+    let content = UNMutableNotificationContent()
+    content.title = exhibit.name
+    content.body = "Starts in 10 minutes: \(exhibit.name)"
+    content.sound = .default
+
+    let trigger = UNCalendarNotificationTrigger(dateMatching: calendar.dateComponents([.year, .month, .day, .hour, .minute], from: notificationDate), repeats: false)
+    
+    let request = UNNotificationRequest(identifier: exhibit.id.uuidString, content: content, trigger: trigger)
+    
+    UNUserNotificationCenter.current().add(request) { error in
+        if let error = error {
+            print("通知のスケジュール失敗: \(error.localizedDescription)")
+        }
+    }
+}
+
+func removeScheduledNotification(for exhibit: Exhibit) {
+    UNUserNotificationCenter.current()
+        .removePendingNotificationRequests(withIdentifiers: [exhibit.id.uuidString])
 }
 
 
