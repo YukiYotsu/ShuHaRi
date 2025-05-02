@@ -46,7 +46,7 @@ struct ContentView: View {
                 // filteredExhibitsにすることで検索結果だけに絞る
                 List(filteredExhibits) { exhibit in
                     NavigationLink(destination: ExhibitDetailView(exhibit: exhibit)) {
-                        // 部屋空間ごとに分けてあげたい
+                        // 部屋空間ごとにセクションにして分けると見やすそう
                         // 今のところ出展同士がくっついてみえる。
                         HStack {
                             Image(exhibit.imageName)
@@ -69,7 +69,7 @@ struct ContentView: View {
                     }
                 }
                 .navigationTitle(localizedString("Home"))
-                .searchable(text: $searchText, prompt: "Search exhibits") // 🔍 検索バーを追加
+                .searchable(text: $searchText, prompt: localizedString("Search exhibits"))
                 .navigationBarItems(trailing:
                                     NavigationLink(destination: SettingsView()) {
                                         Image(systemName: "gear")
@@ -97,12 +97,16 @@ struct ContentView: View {
         .onChange(of: selectedLanguage) { print("Selected language changed to: \(selectedLanguage)") }
     }
     
+    // 言語対応は全てここに格納可能。
+    // 使い方：　Text(localizedString("Tickets"))
+    // Ticketsのようにキーを設定した配列である。
     func localizedString(_ key: String) -> String {
         switch selectedLanguage {
         case "🇯🇵日本語":
-            return ["Program": "プログラム", "Home": "ホーム", "Browse": "見つける"][key] ?? key
+            return ["Program": "プログラム", "Home": "ホーム", "Browse": "見つける", "Search exhibits": "出展を検索する"][key] ?? key
         case "🇩🇪Deutsch":
-            return ["Program": "Programm", "Home": "Startseite", "Browse": "Durchsuchen"][key] ?? key
+            return ["Program": "Programm", "Home": "Startseite", "Browse": "Durchsuchen", "Search exhibits": "Exponate suchen"][key] ?? key
+        // それ以外はそのキーのまま返す
         default:
             return key
         }
@@ -128,6 +132,7 @@ struct SettingsView: View {
     }
 }
 
+// 出展の情報はここで型を作る
 struct Exhibit: Identifiable {
     var id = UUID()
     var name: String
@@ -183,7 +188,6 @@ struct ExhibitDetailView: View {
         }
     }
 }
-
 
 #Preview {
     ContentView()
