@@ -191,7 +191,6 @@ struct SettingsView: View {
             }
             
             // 出展の通知設定
-            // 出展の通知設定
             Section(header: Text("Notifications")) {
                 List(exhibits) { exhibit in
                     Toggle(isOn: Binding(
