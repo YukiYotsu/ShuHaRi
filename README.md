@@ -16,3 +16,5 @@ Tomorrow) JAPAN Scholarship Program by the Japanese Ministry of
 Education, Culture, Sports, Science and Technology (MEXT). We are
 currently seeking sponsorships from companies and organizations that share
 our vision, through both financial and in-kind support.
+
+*Designed by ShuHaRi Team.*
