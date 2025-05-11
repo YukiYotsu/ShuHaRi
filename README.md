@@ -18,3 +18,4 @@ currently seeking sponsorships from companies and organizations that share
 our vision, through both financial and in-kind support.
 
 *Designed by ShuHaRi Team.*
+*Developed by Yuki.*
