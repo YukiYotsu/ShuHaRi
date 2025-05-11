@@ -19,3 +19,7 @@ our vision, through both financial and in-kind support.
 
 *Designed by ShuHaRi Team.*
 *Developed by Yuki.*
+
+# 📍 Todo
+- Add photo assets sets
+- Add introduction of ShuHaRi OR Think of the content of the 3rd page.  
