@@ -495,6 +495,11 @@ struct FloorMapView: View {
     @State private var selectedExhibit: [Exhibit]? = nil
 
     @State private var scale: CGFloat = 1.0
+    @State private var lastScale: CGFloat = 1.0
+    @State private var offset: CGSize = .zero
+    @State private var lastOffset: CGSize = .zero
+
+    @State private var showTimetable = false
     
     let roomToExhibit: [String: [Exhibit]]
 
@@ -523,31 +528,59 @@ struct FloorMapView: View {
                             .resizable()
                             .scaledToFit()
 //                            .frame(width: geo.size.width)
-                            .scaleEffect(scale) // スケールを適用
-                            .gesture(MagnificationGesture()
-                                .onChanged { value in
-                                    scale = value.magnitude
-                                }
-                                .onEnded { _ in
-                                    // ズーム後にスケールをリセットする場合
-//                                    scale = 1.0
-                                }
+                            .scaleEffect(scale)
+                            .offset(offset)
+                            .gesture(
+                                SimultaneousGesture(
+                                    MagnificationGesture()
+                                        .onChanged { value in
+                                            scale = lastScale * value
+                                        }
+                                        .onEnded { _ in
+                                            lastScale = scale
+                                        },
+                                    DragGesture()
+                                        .onChanged { gesture in
+                                            offset = CGSize(
+                                                width: lastOffset.width + gesture.translation.width,
+                                                height: lastOffset.height + gesture.translation.height
+                                            )
+                                        }
+                                        .onEnded { _ in
+                                            lastOffset = offset
+                                        }
+                                )
                             )
+
 
                         if showExhibits {
                             Image("layer_exhibits")
                                 .resizable()
                                 .scaledToFit()
-                                .scaleEffect(scale) // スケールを適用
-                                .gesture(MagnificationGesture()
-                                    .onChanged { value in
-                                        scale = value.magnitude
-                                    }
-                                    .onEnded { _ in
-                                        // ズーム後にスケールをリセットする場合
-//                                        scale = 1.0
-                                    }
+                                .scaleEffect(scale)
+                                .offset(offset)
+                                .gesture(
+                                    SimultaneousGesture(
+                                        MagnificationGesture()
+                                            .onChanged { value in
+                                                scale = lastScale * value
+                                            }
+                                            .onEnded { _ in
+                                                lastScale = scale
+                                            },
+                                        DragGesture()
+                                            .onChanged { gesture in
+                                                offset = CGSize(
+                                                    width: lastOffset.width + gesture.translation.width,
+                                                    height: lastOffset.height + gesture.translation.height
+                                                )
+                                            }
+                                            .onEnded { _ in
+                                                lastOffset = offset
+                                            }
+                                    )
                                 )
+
                         }
 
                         if showRoomnames {
@@ -555,26 +588,49 @@ struct FloorMapView: View {
                                 .resizable()
                                 .scaledToFit()
 //                                .frame(width:
-                                .scaleEffect(scale) // スケールを適用
-                                .gesture(MagnificationGesture()
-                                    .onChanged { value in
-                                        scale = value.magnitude
-                                    }
-                                    .onEnded { _ in
-                                        // ズーム後にスケールをリセットする場合
-//                                        scale = 1.0
-                                    }
+                                .scaleEffect(scale)
+                                .offset(offset)
+                                .gesture(
+                                    SimultaneousGesture(
+                                        MagnificationGesture()
+                                            .onChanged { value in
+                                                scale = lastScale * value
+                                            }
+                                            .onEnded { _ in
+                                                lastScale = scale
+                                            },
+                                        DragGesture()
+                                            .onChanged { gesture in
+                                                offset = CGSize(
+                                                    width: lastOffset.width + gesture.translation.width,
+                                                    height: lastOffset.height + gesture.translation.height
+                                                )
+                                            }
+                                            .onEnded { _ in
+                                                lastOffset = offset
+                                            }
+                                    )
                                 )
+
                         }
                     }
                 }
                 Spacer()
+                TimetableButtonWrapper()
+                    .frame(height: 44) // 高さ調整
+                    .padding(.horizontal)
                 Text("Search for your favorite on the 'Home' page.")
                     .padding([.horizontal])
                     .foregroundColor(.secondary)
                 Spacer()
                 Spacer()
                 Spacer()
+            }
+            .onReceive(NotificationCenter.default.publisher(for: Notification.Name("ShowTimetableImage"))) { _ in
+                        showTimetable = true
+            }
+            .sheet(isPresented: $showTimetable) {
+                ZoomableImageView(imageName: "Timetable")
             }
             
             
@@ -595,6 +651,72 @@ struct FloorMapView: View {
     }
     
 }
+
+// Timetable表示するボタンの設定Wrap
+struct TimetableButtonWrapper: UIViewRepresentable {
+    func makeUIView(context: Context) -> TimetableButtonView {
+        return TimetableButtonView()
+    }
+
+    func updateUIView(_ uiView: TimetableButtonView, context: Context) {
+        // 何もしない
+    }
+}
+
+// Timetable表示用View
+import SwiftUI
+
+struct ZoomableImageView: View {
+    let imageName: String
+    
+    // Zoom用State
+    @State private var scale: CGFloat = 1.0
+    @State private var lastScale: CGFloat = 1.0
+    // Swipe用State
+    @State private var offset: CGSize = .zero
+    @State private var lastOffset: CGSize = .zero
+
+    var body: some View {
+        VStack {
+            Text("📅Timetable")
+                .font(.title)
+                .padding()
+
+            GeometryReader { geometry in
+                Image(imageName)
+                    .resizable()
+                    .scaledToFit()
+                    .scaleEffect(scale)
+                    .offset(offset)
+                    .gesture(
+                        SimultaneousGesture(
+                            MagnificationGesture()
+                                .onChanged { value in
+                                    scale = lastScale * value
+                                }
+                                .onEnded { _ in
+                                    lastScale = scale
+                                },
+                            DragGesture()
+                                .onChanged { gesture in
+                                    offset = CGSize(
+                                        width: lastOffset.width + gesture.translation.width,
+                                        height: lastOffset.height + gesture.translation.height
+                                    )
+                                }
+                                .onEnded { _ in
+                                    lastOffset = offset
+                                }
+                        )
+                    )
+                    .frame(width: geometry.size.width, height: geometry.size.height)
+                    .clipped()
+            }
+            .padding()
+        }
+    }
+}
+
 
 #Preview {
     ContentView()
