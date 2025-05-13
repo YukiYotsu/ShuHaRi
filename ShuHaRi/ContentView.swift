@@ -35,7 +35,7 @@ let exhibits = [
     Exhibit(name: "Dullstone・鈍石・Ein Stein", exhibitor: "Yurika Saito", description: "Experience the cycles of nature and time-touch stones from the sea and forest, walk among fabrics dyed with reused tea leaves from a Berlin restaurant, using the Japanese technique of 'Kusaki-zome', feel the time and rhythm held in what we see and touch.", tag1: "nature", tag2: "natural dye", tag3: "stone", imageName: "4_dullstone", startTime: "", endTime: "", roomname: "Seminar Room3"),
     
     // yadokari picnic
-    Exhibit(name: "yadokari picnic", exhibitor: "burco", description: "Just as hermit crabs drift through the ocean of society, we gather under a shared shell. A space to pause, exchange, and to let things unfold - storytelling, music, open dialogues, shared experiences.", tag1: "co-creation", tag2: "spontaneity", tag3: "openness", imageName: "5_yadokari_picnic", startTime: "", endTime: "", roomname: "Courtyard"),
+    Exhibit(name: "yadokari picnic", exhibitor: "burco", description: "Just as hermit crabs drift through the ocean of society, we gather under a shared shell. A space to pause, exchange, and to let things unfold - storytelling, music, open dialogues, shared experiences.", tag1: "co-creation", tag2: "spontaneity", tag3: "openness", imageName: "5_yadokari_picnic", startTime: "Welcome", endTime: "", roomname: "Courtyard"),
     
     // Forests
     Exhibit(name: "Forests", exhibitor: "Taiki Ishida", description: "This presentation invites us to realize the complexity and diversity of the word 'forest'.", tag1: "nature", tag2: "environment", tag3: "diversity", imageName: "6_forests", startTime: "", endTime: "", roomname: "Seminar Room3"),
@@ -126,6 +126,38 @@ let exhibits = [
     
     // The way we have not taken - legacy from 1945 in Berlin and Tokyo
     Exhibit(name: "The way we have not taken - legacy from 1945 in Berlin and Tokyo", exhibitor: "Erika Iwashiro, Hiroki Miyata, Keishi Kato, Sakura Hagata, Tomoka Masuyama", description: "Negative Legacy — Berlin, where the past lingers like a fossil, and Tokyo, once turned to ash. Eighty years after the war, how should we carry these memories forward? \n\nAmid global unrest, we must revisit history’s lessons and reflect on which symbols deserve to endure. Through the intertwined stories of these two cities, our workshop explores what legacy generation then should have left—and how our generation might shape a future rooted in remembrance.", tag1: "legacy", tag2: "1945", tag3: "reformation", imageName: "34_legacy_tokyo_berlin", startTime: "11:30", endTime: "12:30", roomname: "Hall"),
+]
+
+// 通知スケジュールの雛形
+struct Notification: Identifiable {
+    let id = UUID() // 雛形を置くことで「一意の識別子」を設定できる
+    let title: String
+    let body: String
+    let hour: Int
+    let minute: Int
+}
+
+// 通知スケジュール
+let notifications = [
+    Notification(title: "🧠Trustware: Building Ethical Intelligence in the AI Age", body: "Yuki is speaking at 📍Hall.", hour: 10, minute: 25), // 5分前
+    Notification(title: "City of Legacy - what should have remained in Berlin and Tokyo", body: "The new workshop is opening at 📍Hall", hour: 11, minute: 25), // 5分前
+    Notification(title: "🎎The Art of Japanese Dance", body: "Experience Nihon Buyo🇯🇵 at 📍Hall", hour: 12, minute: 55), // 5分前
+    Notification(title: "🎹The sound of light", body: "Hikari no Oto at Hall", hour: 14, minute: 25), // 5分前
+    Notification(title: "🕺Dancing the Waves of Emotion", body: "Hikari no Oto at 📍Hall", hour: 16, minute: 40), // 5分前
+    Notification(title: "🍵Teeraum", body: "Japanese tea café opened !📍Networking Lounge", hour: 10, minute: 0), // オープン通知なので0分前
+    Notification(title: "🍵Teeraum", body: "It's time for last orders.", hour: 17, minute: 25), // 5分前
+    Notification(title: "🥢Ichiju-Sansai", body: "Experience Japanese food 📍Networking Lounge", hour: 11, minute: 0), // オープン通知なので0分前
+    Notification(title: "🥢Ichiju-Sansai", body: "It's time for last orders.", hour: 13, minute: 25), // 5分前
+    Notification(title: "Takoyaki", body: "Street Snack at 📍Networking Lounge", hour: 14, minute: 30), // オープン通知なので0分前
+    Notification(title: "Takoyaki", body: "Closes in 5 minutes", hour: 16, minute: 25), // 終了通知を5分前に
+    Notification(title: "Takibi Storytelling❶", body: "Sara is speaking at 📍Courtyard", hour: 10, minute: 40), // 5分前
+    Notification(title: "Takibi Storytelling❷", body: "Sara is speaking at 📍Courtyard", hour: 15, minute: 55), // 5分前
+    Notification(title: "🎧Tiny theater", body: "Let's listen to Sky Jazz at 📍Courtyard", hour: 15, minute: 25), // 5分前
+    Notification(title: "🥋Physical Performance Talkshow", body: "Talkshow at 📍Courtyard", hour: 16, minute: 55), // 5分前
+    Notification(title: "📚Next Step Together❶", body: "Join discussion at 📍Information Lounge", hour: 11, minute: 25), // 5分前
+    Notification(title: "📚Next Step Together❷", body: "Join discussion at 📍Information Lounge", hour: 15, minute: 25), // 5分前
+    Notification(title: "In the Frame", body: "Let's talk at 📍Seminar Room 1&2.", hour: 14, minute: 25), // 5分前
+    Notification(title: "Test Notification", body: "Look forward to today's exhibitions!", hour: 19, minute: 30) // イベント30分前
 ]
 
 // 言語対応は全てここに格納可能。
@@ -253,11 +285,13 @@ struct ContentView: View {
                 Text(localizedString("ShuHaRi", selectedLanguage: selectedLanguage))
             }
         }
+        .onAppear {
+            requestNotificationAuthorization()
+            scheduleNotifications() //
+        }
         .onChange(of: selectedLanguage) { print("Selected language changed to: \(selectedLanguage)") }
         
     }
-    
-    
     
     // 色変更関数
     func colorForTime(_ startTime: String, _ endTime: String) -> Color {
@@ -300,12 +334,51 @@ struct ContentView: View {
         }
         return .primary
     }
+    
+    /* ===== これ以降通知設定 ===== */
+    func requestNotificationAuthorization() {
+        let center = UNUserNotificationCenter.current()
+        center.requestAuthorization(options: [.alert, .sound]) { granted, error in
+            if granted {
+                print("Notification permission granted.")
+            } else if let error = error {
+                print("Error requesting notification permission: \(error.localizedDescription)")
+            }
+        }
+    }
+
+    func scheduleNotifications() {
+        
+        // for文で中身をひとつずつ取り出す
+        for notification in notifications {
+            let content = UNMutableNotificationContent()
+            content.title = notification.title
+            content.body = notification.body
+            content.sound = .default
+
+            var dateComponents = DateComponents()
+            dateComponents.hour = notification.hour
+            dateComponents.minute = notification.minute
+
+            let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
+
+            let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+
+            UNUserNotificationCenter.current().add(request) { error in
+                if let error = error {
+                    print("Error scheduling notification: \(error.localizedDescription)")
+                } else {
+                    print("Notification scheduled for \(notification.title) at \(notification.hour):\(notification.minute)")
+                }
+            }
+        }
+    }
 
 }
 
 
 struct SettingsView: View {
-    @AppStorage("selectedLanguage") private var selectedLanguage: String = "日本語"
+    @AppStorage("selectedLanguage") private var selectedLanguage: String = "🇯🇵日本語"
 
     let languages = ["🇯🇵日本語", "🇩🇪Deutsch", "🇬🇧English"]
 
@@ -324,11 +397,26 @@ struct SettingsView: View {
             }
 
             // 出展の通知設定
-            Section(header: Text("Notifications")) {
-                
+            Section(header: Text("Notifications' Schedule")) {
+                ForEach(notifications.sorted(by: { ($0.hour, $0.minute) < ($1.hour, $1.minute) })) { notification in
+                    let timeString = String(format: "%02d:%02d", notification.hour, notification.minute)
+                    VStack(alignment: .leading) {
+                        Text(timeString)
+                            .font(.subheadline)
+                            .foregroundColor(.gray) // 薄字
+                        Text(notification.title)
+                            .font(.headline)
+                        Text(notification.body)
+                            .font(.subheadline)
+                            .foregroundColor(.gray) // 薄字
+                    }
+                    .padding(.bottom, 10)
+                    .padding(.top, 5) // 上部の余白
+                    .background(Color.clear) // 必要に応じて背景を設定
+                }
             }
         }
-        .navigationTitle("Setting")
+        .navigationTitle("Settings")
     }
     
 }
@@ -555,27 +643,14 @@ struct FloorMapView: View {
                 Spacer()
                 Spacer()
             }
-            .onReceive(NotificationCenter.default.publisher(for: Notification.Name("ShowTimetableImage"))) { _ in
-                        showTimetable = true
+            .onReceive(NotificationCenter.default.publisher(for: Foundation.Notification.Name("ShowTimetableImage"))) { _ in
+                showTimetable = true
             }
             .sheet(isPresented: $showTimetable) {
                 ZoomableImageView(imageName: "Timetable")
             }
             
             
-        }
-    }
-
-    @ViewBuilder
-    func roomButton(geo: GeometryProxy, roomKey: String, x: CGFloat, y: CGFloat) -> some View {
-        if let exhibit = roomToExhibit[roomKey] {
-            Button(action: {
-                selectedExhibit = exhibit
-            }) {
-                Color.clear
-            }
-            .frame(width: 80, height: 80)
-            .position(x: geo.size.width * x, y: geo.size.height * y)
         }
     }
     
@@ -643,7 +718,6 @@ struct ZoomableImageView: View {
         }
     }
 }
-
 
 #Preview {
     ContentView()
