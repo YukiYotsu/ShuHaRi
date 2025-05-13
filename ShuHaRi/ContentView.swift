@@ -165,9 +165,9 @@ let notifications = [
 func localizedString(_ key: String, selectedLanguage: String) -> String {
     switch selectedLanguage {
     case "🇯🇵日本語":
-        return ["Program": "プログラム", "Home": "ホーム", "ShuHaRi": "守破離とは", "Search for exhibits": "出展を検索する", "Notifications": "通知設定", "Exhibits": "コンセプト", "Roomnames": "空間通称"][key] ?? key
+        return ["Program": "プログラム", "Home": "ホーム", "Links": "リンク一覧", "Search for exhibits": "出展を検索する", "Notifications": "通知設定", "Exhibits": "コンセプト", "Roomnames": "空間通称"][key] ?? key
     case "🇩🇪Deutsch":
-        return ["Program": "Programm", "Home": "Startseite", "ShuHaRi": "ShuHaRi", "Search for exhibits": "Exponate suchen", "Notifications": "Benachrichtigungen", "Exhibits": "Konzept", "Roomnames": "Raumnamen"][key] ?? key
+        return ["Program": "Programm", "Home": "Startseite", "Links": "Links", "Search for exhibits": "Exponate suchen", "Notifications": "Benachrichtigungen", "Exhibits": "Konzept", "Roomnames": "Raumnamen"][key] ?? key
     // それ以外はそのキーのまま返す
     default:
         return key
@@ -275,14 +275,84 @@ struct ContentView: View {
             // ShuHaRiの説明など
             // 何度も見ることは想定されないタブ
             NavigationView{
-                VStack {
+                List {
+                    /* TO-DO ここら辺は日本語訳・ドイツ語訳を準備しておくと良い。*/
+                    // 守破離の説明
+                    Section(header: Text("About SHUHARI").font(.headline)) {
+                        Image("shuhari_poster")
+                            .resizable()
+                            .scaledToFit()
+                            .clipped()
+                            .cornerRadius(8)
+                        Text("SHUHARI is an event organized by Japanese youth based in Europe, celebrating expression and dialogue. It will take place in May 2025, featuring over 50 creatives, involving a range of workshops, performances, exhibitions, talks, and authentic Japanese food stalls.\nBy holding space for young people to express and share Japanese culture, we aim to deepen intercultural exchange and lay the groundwork for future international business opportunities. The event is held in cooperation with the Japanese-German Center Berlin and the Tobitate! (Leap for Tomorrow) JAPAN Scholarship Program by the Japanese Ministry of Education, Culture, Sports, Science and Technology (MEXT). We are currently seeking sponsorships from companies and organizations that share our vision, through both financial and in-kind support.")
+                        Link("🖼️Official HP", destination: URL(string: "https://shuhariberlin.github.io/official/")!)
+                            .foregroundColor(.blue)
+                        Link("🇩🇪jdzb's Page", destination: URL(string: "https://jdzb.de/de/veranstaltungen/tobitate-event-shuhari-berlin-festival-2025")!)
+                            .foregroundColor(.blue)
+                        Link("🎟️Buy Tickets", destination: URL(string: "https://rausgegangen.de/en/events/shuhari-berlin-festival-2025-1/")!)
+                            .foregroundColor(.blue)
+                        Link("🌊Instagram", destination: URL(string: "https://www.instagram.com/shuhari_berlin/")!)
+                            .foregroundColor(.blue)
+                        
+                    }
                     
+                    // 日独ベルリンセンターの説明
+                    Section(header: Text("Japanisch-Deutsches Zentrum Berlin").font(.headline)){
+                        Image("jdzb_logo")
+                            .resizable()
+                            .scaledToFit()
+                            .clipped()
+                            .cornerRadius(8)
+                        Text("Herzlich willkommen beim Japanisch-Deutschen Zentrum Berlin\nDie gemeinnützige Stiftung hat es sich zur Aufgabe gemacht, den deutsch-japanischen und internationalen Austausch auf den Ebenen von Wirtschaft, Wissenschaft, Kultur, Gesellschaft und Politik zu fördern und zu vertiefen. Damit tragen wir seit 1985 zur politischen und wirtschaftlichen Entwicklung unserer Länder bei. Wir hoffen, Sie bald – physisch oder virtuell – bei uns begrüßen zu können.\n\nExcerpt from the official website.")
+                        // 🇬🇧Excerpt from the official website.
+                        // 🇯🇵公式HPより抜粋
+                        // 🇩🇪Auszug von der offiziellen Website.
+                        Link("🖼️Official HP", destination: URL(string: "https://jdzb.de/de")!)
+                            .foregroundColor(.blue)
+                        Link("📸Instagram", destination: URL(string: "https://www.instagram.com/jdzb.pr/")!)
+                            .foregroundColor(.blue)
+                    }
+                    
+                    // トビタテの説明
+                    Section(header: Text("About Tobitate!").font(.headline)) {
+                        Image("tobitate_logo")
+                            .resizable()
+                            .scaledToFit()
+                            .clipped()
+                            .cornerRadius(8)
+                        Text("The Ministry of Education, Culture, Sports, Science and Technology (MEXT) launched the “Tobitate! Study Abroad Initiative” in 2013, a public-private project for promoting overseas study, with the aim of creating the momentum for all young Japanese university and high school students with the motivation and potential to take the first step toward studying abroad.\n\nIn the first stage (from 2013 to 2022), approximately 9,500 students were selected under Tobitate's scholarship program, Tobitate Young Ambassador Program. They experienced diverse practical activities overseas, and were developed as global leaders.\n\nBased on these achievements, we are implementing the second stage (from 2023 to 2027) with a new vision and concept to continue to strengthen efforts for the development of global leaders by encouraging cooperation among industry, government, and academia.\n\nIn the second stage, we introduce a new vision seeking to build a “society where Japanese youth can take on the challenges of the world, collaborate with people domestically and internationally with ‘candor and determination’, and drive innovation and transformation” together with the concept of “challenge, connect, and co-create”.")
+                        Link("✈️Official HP", destination: URL(string: "https://tobitate-mext.jasso.go.jp/about/english.html")!)
+                            .foregroundColor(.blue)
+                        Link("🌊Instagram", destination: URL(string: "https://www.instagram.com/ryugaku_daizukan/")!)
+                            .foregroundColor(.blue)
+                        
+                    }
+                    
+                    // 開発者の説明
+                    Section(header: Text("Development").font(.headline)) {
+                        Image("dev_photo")
+                            .resizable()
+                            .scaledToFit()
+                            .clipped()
+                            .cornerRadius(8)
+                        Text("Developed by Yuki, \nDesigned by SHUHARI team.\n\n✅There may be updates or changes to some content, but these will NOT be automatically reflected in the app unless manually updated by the developer. Some translation tools are utilized.\n\nFeel free to talk to me if you need help.")
+                        /*
+                         🇯🇵
+                         Developed by Yuki, \nDesigned by SHUHARI team.\n\n✅一部コンテンツに更新・変更がある場合がありますが、それらは通常developerの手により反映されない限りこのアプリに自動で更新が加わることはありません。一部翻訳ツールを利用しています。\n\n助けが必要な時は呼んでくださいね！
+                         🇩🇪
+                         Entwickelt von Yuki, \nEntworfen vom SHUHARI-Team.\n\n✅Es kann Aktualisierungen oder Änderungen an bestimmten Inhalten geben, aber diese werden NICHT automatisch in der App angezeigt, es sei denn, sie werden manuell vom Entwickler aktualisiert. Einige Übersetzungstools werden verwendet.\n\nRuf mich an, wenn du Hilfe brauchst!
+                         */
+                        Link("💻Dev's GitHub", destination: URL(string: "https://github.com/YukiYotsu/ShuHaRi/")!)
+                            .foregroundColor(.blue)
+                        Link("🐧Dev's Instagram", destination: URL(string: "https://www.instagram.com/yuki.yotsu/")!)
+                            .foregroundColor(.blue)
+                    }
                 }
-                .navigationTitle(localizedString("ShuHaRi", selectedLanguage: selectedLanguage))
+                .navigationTitle(localizedString("Links", selectedLanguage: selectedLanguage))
             }
             .tabItem {
-                Image(systemName: "pin.fill")
-                Text(localizedString("ShuHaRi", selectedLanguage: selectedLanguage))
+                Image(systemName: "location.fill")
+                Text(localizedString("Links", selectedLanguage: selectedLanguage))
             }
         }
         .onAppear {
