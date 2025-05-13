@@ -22,4 +22,5 @@ our vision, through both financial and in-kind support.
 
 # 📍 Todo
 - Add photo assets sets **which has not been uploaded yet**.
+- Notification Func. Implement
 - Add introduction of ShuHaRi OR Think of the content of the 3rd page.  
