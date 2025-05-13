@@ -118,7 +118,8 @@ let exhibits = [
     Exhibit(name: "Embraces", exhibitor: "Toranosuke Sano", description: "“Jumping into a frozen lake is dangerous.” “Dogs are not allowed inside the store.” “I hate snow.” “Silent bathing in the sauna.” “Let’s build a residential area over there.” “Always listen to your parents.” \n\nThese are the kinds of statements I grew up surrounded by. Crossing borders, I’ve explored how I perceive the laws of nature, harmony, black boxes, social norms, activism, human relationships, and culture. This work is a filtered and colored expression of those reflections.", tag1: "harmony", tag2: "society", tag3: "ecology", imageName: "30_embraces", startTime: "", endTime: "", roomname: "Seminar Room2"),
     
     // The Art of Japanese Dance: An Introduction to Nihon Buyo
-    Exhibit(name: "The Art of Japanese Dance: An Introduction to Nihon Buyo", exhibitor: "Sasuga Shibahara / Aigorou Hanayagi", description: "Nihon Buyo, a form of Japanese classical dance with a history of over 300 years, will be introduced in this program through clear and accessible explanations along with live demonstrations. Discover the meanings behind the use of fans and gestures, the beauty of stillness and movement, and the spirit of Japanese culture expressed through the art of dance.", tag1: "traditional", tag2: "dance", tag3: "kimono", imageName: "31_the_art_of_japanese_dance", startTime: "13:00", endTime: "14:00", roomname: "Hall"),
+    // 花柳藍五郎 Aigoro Hanayagi 
+    Exhibit(name: "The Art of Japanese Dance: An Introduction to Nihon Buyo", exhibitor: "花柳藍五郎 / Aigorou Hanayagi", description: "Nihon Buyo, a form of Japanese classical dance with a history of over 300 years, will be introduced in this program through clear and accessible explanations along with live demonstrations. Discover the meanings behind the use of fans and gestures, the beauty of stillness and movement, and the spirit of Japanese culture expressed through the art of dance.", tag1: "traditional", tag2: "dance", tag3: "kimono", imageName: "31_the_art_of_japanese_dance", startTime: "13:00", endTime: "14:00", roomname: "Hall"),
     
     // Windows to the world on earth
     Exhibit(name: "Windows to the world on earth", exhibitor: "WE", description: "We are all busy with our own worlds, but sometimes we need to pay attention to the world we all share—the world on our Earth. The WE, a small group of students, creates posters highlighting important facts about our planet. May our posters serve as windows to help realize the reality of this Earth.", tag1: "posters", tag2: "student-group", tag3: "social issues", imageName: "32_windows_to_the_world", startTime: "", endTime: "", roomname: "Seminar Room1"),
@@ -280,7 +281,12 @@ struct ContentView: View {
                     /* TO-DO ここら辺は日本語訳・ドイツ語訳を準備しておくと良い。*/
                     // 守破離の説明
                     Section(header: Text(localizedString("About SHUHARI", selectedLanguage: selectedLanguage)).font(.headline)) {
-                        Image("shuhari_poster")
+                        Image("shuhari_wide_poster")
+                            .resizable()
+                            .scaledToFit()
+                            .clipped()
+                            .cornerRadius(8)
+                        Image("shuhari_introduction")
                             .resizable()
                             .scaledToFit()
                             .clipped()
