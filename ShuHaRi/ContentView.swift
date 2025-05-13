@@ -48,7 +48,7 @@ let exhibits = [
     Exhibit(name: "Today is the first dancing day of the rest of your life", exhibitor: "Yuka Yano", description: "I started dancing after I grew up an adult, so it felt too late to make it my special skill. But l've always lived by the motto, 'Today is the youngest you'll ever be,' and kept searching for what I truly want to do. Now, l'm challenging myself to create my own choreography for the first time.", tag1: "dance", tag2: "hiphop", tag3: "", imageName: "8_today_is_the_first_dancing_day", startTime: "", endTime: "", roomname: "Others"),
     
     // Takoyaki
-    Exhibit(name: "Takoyaki", exhibitor: "Kiki", description: "Hot, crispy, and oh-so-yummy. Takoyaki time! 🔥🥢Let's all enjoy some delicious takoyaki!", tag1: "osaka", tag2: "delicious", tag3: "cheap", imageName: "9_takoyaki", startTime: "14:30", endTime: "16:30", roomname: "Networking Lounge"),
+    Exhibit(name: "Takoyaki", exhibitor: "Kiki", description: "Close 16:30\n\nHot, crispy, and oh-so-yummy. Takoyaki time! 🔥🥢Let's all enjoy some delicious takoyaki!", tag1: "osaka", tag2: "delicious", tag3: "cheap", imageName: "9_takoyaki", startTime: "14:30", endTime: "16:30", roomname: "Networking Lounge"),
     
     // 場所不詳 -- ホワイエで可？
     // Ocho25 recycle x skateboard x Art:
@@ -446,10 +446,14 @@ struct ExhibitDetailView: View {
                 
                 Spacer()
                 
-                Text(exhibit.startTime)
+                Text("🕒" + exhibit.startTime)
                     .foregroundColor(colorForTime(exhibit.startTime, exhibit.endTime))
                     .bold()
                     .padding([.horizontal])
+                Text("📍" + exhibit.roomname)
+                    .padding([.horizontal])
+                    .foregroundColor(.secondary)
+                Spacer()
                     
                 Text(exhibit.description)
                     .font(.body)
