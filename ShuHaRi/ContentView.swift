@@ -14,7 +14,6 @@ struct Exhibit: Identifiable { // Identifiableにより配列にIDを振るこ�
     var startTime: String // 開始時間
     var endTime: String  // 終了時間
     var roomname: String // 部屋空間名
-    var isNotified: Bool = false // 通知フラグデフォルト・偽
 }
 
 // グローバル配列
