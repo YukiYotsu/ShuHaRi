@@ -2,7 +2,7 @@
 //  ShuHaRiApp.swift
 //  ShuHaRi
 //
-//  Created by Yuki on 
+//  Created by Yuki
 //
 
 import SwiftUI
