@@ -1,7 +1,7 @@
 # 👋 Moi!
 I'm Yuki Yotsumoto. This is the README markdown for the App of 守破離（ShuHaRi） Project in 2025.  
 
-*Last modified: 13.05.2025*
+*Last modified: 14.05.2025*
 
 # 🥋 What is SHUHARI?
 SHUHARI is an event organized by Japanese youth based in Europe,
@@ -22,4 +22,3 @@ our vision, through both financial and in-kind support.
 
 # 📍 Todo
 - Add photo assets sets **which has not been uploaded yet**.
-- Add introduction of ShuHaRi OR Think of the content of the 3rd page.  
