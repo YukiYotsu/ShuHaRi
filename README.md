@@ -22,3 +22,6 @@ our vision, through both financial and in-kind support.
 
 # 📍 Todo
 - Add photo assets sets **which has not been uploaded yet**.
+
+# ☺️ Future
+- Send pictures and reports via App, which would be really happy experience even if the event comes to the end.
