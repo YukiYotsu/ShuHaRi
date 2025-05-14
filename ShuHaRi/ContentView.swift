@@ -139,11 +139,11 @@ struct Notification: Identifiable {
 
 // 通知スケジュール
 let notifications = [
-    Notification(title: "🧠Trustware: Building Ethical Intelligence in the AI Age", body: "Yuki is speaking at 📍Hall.", hour: 10, minute: 25), // 5分前
-    Notification(title: "City of Legacy - what should have remained in Berlin and Tokyo", body: "The new workshop is opening at 📍Hall", hour: 11, minute: 25), // 5分前
-    Notification(title: "🎎The Art of Japanese Dance", body: "Experience Nihon Buyo🇯🇵 at 📍Hall", hour: 12, minute: 55), // 5分前
-    Notification(title: "🎹The sound of light", body: "Hikari no Oto at Hall", hour: 14, minute: 25), // 5分前
-    Notification(title: "🕺Dancing the Waves of Emotion", body: "Hikari no Oto at 📍Hall", hour: 16, minute: 40), // 5分前
+    Notification(title: "🧠Trustware: Building Ethical Intelligence in the AI Age", body: "Yuki is speaking at 📍Hall.", hour: 10, minute: 20), // 10分前
+    Notification(title: "City of Legacy - what should have remained in Berlin and Tokyo", body: "The new workshop is opening at 📍Hall", hour: 11, minute: 20), // 10分前
+    Notification(title: "🎎The Art of Japanese Dance", body: "Experience Nihon Buyo🇯🇵 at 📍Hall", hour: 12, minute: 50), // ご本人の要望により10分前
+    Notification(title: "🎹The sound of light", body: "Hikari no Oto at 📍Hall", hour: 14, minute: 20), // 10分前
+    Notification(title: "🕺Dancing the Waves of Emotion", body: "Experience the moment when emotions transform into movement. 📍Hall", hour: 16, minute: 35), // 10分前
     Notification(title: "🍵Teeraum", body: "Japanese tea café opened !📍Networking Lounge", hour: 10, minute: 0), // オープン通知なので0分前
     Notification(title: "🍵Teeraum", body: "It's time for last orders.", hour: 17, minute: 25), // 5分前
     Notification(title: "🥢Ichiju-Sansai", body: "Experience Japanese food 📍Networking Lounge", hour: 11, minute: 0), // オープン通知なので0分前
@@ -154,8 +154,8 @@ let notifications = [
     Notification(title: "Takibi Storytelling❷", body: "Sara is speaking at 📍Courtyard", hour: 15, minute: 55), // 5分前
     Notification(title: "🎧Tiny theater", body: "Let's listen to Sky Jazz at 📍Courtyard", hour: 15, minute: 25), // 5分前
     Notification(title: "🥋Physical Performance Talkshow", body: "Talkshow at 📍Courtyard", hour: 16, minute: 55), // 5分前
-    Notification(title: "📚Next Step Together❶", body: "Join discussion at 📍Information Lounge", hour: 11, minute: 25), // 5分前
-    Notification(title: "📚Next Step Together❷", body: "Join discussion at 📍Information Lounge", hour: 15, minute: 25), // 5分前
+    Notification(title: "📚Next Step Together❶", body: "Join discussion at 📍Information Lounge", hour: 11, minute: 20), // 10分前
+    Notification(title: "📚Next Step Together❷", body: "Join discussion at 📍Information Lounge", hour: 15, minute: 20), // 10分前
     Notification(title: "In the Frame", body: "Let's talk at 📍Seminar Room 1&2.", hour: 14, minute: 25), // 5分前
     Notification(title: "Test Notification", body: "Look forward to today's exhibitions!", hour: 19, minute: 30) // イベント30分前
 ]
