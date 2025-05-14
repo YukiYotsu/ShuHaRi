@@ -147,9 +147,10 @@ let notifications = [
     Notification(title: "🍵Teeraum", body: "Japanese tea café opened !📍Networking Lounge", hour: 10, minute: 0), // オープン通知なので0分前
     Notification(title: "🍵Teeraum", body: "It's time for last orders.", hour: 17, minute: 25), // 5分前
     Notification(title: "🥢Ichiju-Sansai", body: "Experience Japanese food 📍Networking Lounge", hour: 11, minute: 0), // オープン通知なので0分前
-    Notification(title: "🥢Ichiju-Sansai", body: "It's time for last orders.", hour: 13, minute: 25), // 5分前
+    Notification(title: "🥢Ichiju-Sansai", body: "It's time for last orders.", hour: 13, minute: 55), // L.O.を5分前
+    Notification(title: "🥢Ichiju-Sansai", body: "Closes in 10 minutes", hour: 14, minute: 20), // 終了通知を10分前に
     Notification(title: "Takoyaki", body: "Street Snack at 📍Networking Lounge", hour: 14, minute: 30), // オープン通知なので0分前
-    Notification(title: "Takoyaki", body: "Closes in 5 minutes", hour: 16, minute: 25), // 終了通知を5分前に
+    Notification(title: "Takoyaki", body: "Closes in 10 minutes", hour: 16, minute: 20), // 終了通知を10分前に
     Notification(title: "Takibi Storytelling❶", body: "Sara is speaking at 📍Courtyard", hour: 10, minute: 40), // 5分前
     Notification(title: "Takibi Storytelling❷", body: "Sara is speaking at 📍Courtyard", hour: 15, minute: 55), // 5分前
     Notification(title: "🎧Tiny theater", body: "Let's listen to Sky Jazz at 📍Courtyard", hour: 15, minute: 25), // 5分前
