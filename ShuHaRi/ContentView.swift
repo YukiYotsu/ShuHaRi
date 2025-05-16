@@ -205,141 +205,285 @@ struct ContentView: View {
     var groupedExhibits: [String: [Exhibit]] {
         Dictionary(grouping: filteredExhibits, by: { $0.roomname })
     }
-
+    
     var body: some View {
-        TabView {
-            // Programmeタブ
-            NavigationView {
-                FloorMapView(roomToExhibit: groupedExhibits)
-            }.tabItem {
-                Image(systemName: "map")
-                Text(localizedString("Program", selectedLanguage: selectedLanguage))
-            }
-            
-            // Homeタブ
-            NavigationView {
-                List {
-                // カスタムソートを適用
-                let sortedRooms = groupedExhibits.keys.sorted { room1, room2 in
-                    if room1 == "Networking Lounge" {
-                        return true // "Networking Lounge"を一番上に
-                    }
-                    if room2 == "Networking Lounge" {
-                        return false // 他の部屋より下に
-                    }
-                    return room1 < room2 // 通常のアルファベット順
-                }
+        /* iOS 17.0以上 */
+        if #available(iOS 17.0, *) {
+            TabView {
+                        // Programmeタブ
+                        NavigationView {
+                            FloorMapView(roomToExhibit: groupedExhibits)
+                        }.tabItem {
+                            Image(systemName: "map")
+                            Text(localizedString("Program", selectedLanguage: selectedLanguage))
+                        }
+                        
+                        // Homeタブ
+                        NavigationView {
+                            List {
+                            // カスタムソートを適用
+                            let sortedRooms = groupedExhibits.keys.sorted { room1, room2 in
+                                if room1 == "Networking Lounge" {
+                                    return true // "Networking Lounge"を一番上に
+                                }
+                                if room2 == "Networking Lounge" {
+                                    return false // 他の部屋より下に
+                                }
+                                return room1 < room2 // 通常のアルファベット順
+                            }
 
-                    ForEach(sortedRooms, id: \.self) { room in
-                        Section(header: Text(room).font(.headline)) {
-                            let exhibits = groupedExhibits[room] ?? []
-                            ForEach(exhibits, id: \.id) { exhibit in
-                                NavigationLink(destination: ExhibitDetailView(exhibit: exhibit)) {
-                                    ExhibitRowView(exhibit: exhibit)
+                                ForEach(sortedRooms, id: \.self) { room in
+                                    Section(header: Text(room).font(.headline)) {
+                                        let exhibits = groupedExhibits[room] ?? []
+                                        ForEach(exhibits, id: \.id) { exhibit in
+                                            NavigationLink(destination: ExhibitDetailView(exhibit: exhibit)) {
+                                                ExhibitRowView(exhibit: exhibit)
+                                            }
+                                        }
+                                    }
+                                }
+
+                            }
+                            .navigationTitle(localizedString("Home", selectedLanguage: selectedLanguage))
+                            .searchable(text: $searchText, prompt: localizedString("Search for exhibits", selectedLanguage: selectedLanguage))
+                            .navigationBarItems(trailing:
+                                                NavigationLink(destination: SettingsView()) {
+                                                    Image(systemName: "gear")
+                                                        .foregroundColor(.blue)
+                                                }
+                                            )
+                        }
+                        .tabItem {
+                            Image(systemName: "house.fill")
+                            Text(localizedString("Home", selectedLanguage: selectedLanguage))
+                        }
+                        
+                        // ShuHaRiの説明など
+                        // 何度も見ることは想定されないタブ
+                        NavigationView{
+                            List {
+                                // 守破離の説明
+                                Section(header: Text(localizedString("About SHUHARI", selectedLanguage: selectedLanguage)).font(.headline)) {
+                                    Image("shuhari_wide_poster")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .clipped()
+                                        .cornerRadius(8)
+                                    Image("shuhari_introduction")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .clipped()
+                                        .cornerRadius(8)
+                                    Text(localizedString("SHUHARI is an event organized by Japanese youth based in Europe, celebrating expression and dialogue. It will take place in May 2025, featuring over 50 creatives, involving a range of workshops, performances, exhibitions, talks, and authentic Japanese food stalls.\nBy holding space for young people to express and share Japanese culture, we aim to deepen intercultural exchange and lay the groundwork for future international business opportunities. The event is held in cooperation with the Japanese-German Center Berlin and the Tobitate! (Leap for Tomorrow) JAPAN Scholarship Program by the Japanese Ministry of Education, Culture, Sports, Science and Technology (MEXT). We are currently seeking sponsorships from companies and organizations that share our vision, through both financial and in-kind support.", selectedLanguage: selectedLanguage))
+                                    Link(localizedString("🖼️Official HP",selectedLanguage: selectedLanguage), destination: URL(string: "https://shuhariberlin.github.io/official/")!)
+                                        .foregroundColor(.blue)
+                                    Link(localizedString("🇩🇪jdzb's Page", selectedLanguage: selectedLanguage), destination: URL(string: "https://jdzb.de/de/veranstaltungen/tobitate-event-shuhari-berlin-festival-2025")!)
+                                        .foregroundColor(.blue)
+                                    Link(localizedString("🎟️Get Tickets", selectedLanguage: selectedLanguage), destination: URL(string: "https://rausgegangen.de/en/events/shuhari-berlin-festival-2025-1/")!)
+                                        .foregroundColor(.blue)
+                                    Link(localizedString("🌊Instagram", selectedLanguage: selectedLanguage), destination: URL(string: "https://www.instagram.com/shuhari_berlin/")!)
+                                        .foregroundColor(.blue)
+                                    
+                                }
+                                
+                                // 日独ベルリンセンターの説明
+                                Section(header: Text("Japanisch-Deutsches Zentrum Berlin").font(.headline)){
+                                    Image("jdzb_logo")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .clipped()
+                                        .cornerRadius(8)
+                                    Text(localizedString("Herzlich willkommen beim Japanisch-Deutschen Zentrum Berlin\nDie gemeinnützige Stiftung hat es sich zur Aufgabe gemacht, den deutsch-japanischen und internationalen Austausch auf den Ebenen von Wirtschaft, Wissenschaft, Kultur, Gesellschaft und Politik zu fördern und zu vertiefen. Damit tragen wir seit 1985 zur politischen und wirtschaftlichen Entwicklung unserer Länder bei. Wir hoffen, Sie bald – physisch oder virtuell – bei uns begrüßen zu können.\n\nExcerpt from the official website.", selectedLanguage: selectedLanguage))
+                                    Link(localizedString("🖼️Official HP", selectedLanguage: selectedLanguage), destination: URL(string: "https://jdzb.de/de")!)
+                                        .foregroundColor(.blue)
+                                    Link(localizedString("📸Instagram", selectedLanguage: selectedLanguage), destination: URL(string: "https://www.instagram.com/jdzb.pr/")!)
+                                        .foregroundColor(.blue)
+                                }
+                                
+                                // トビタテの説明
+                                Section(header: Text(localizedString("About Tobitate!", selectedLanguage: selectedLanguage)).font(.headline)) {
+                                    Image("tobitate_logo")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .clipped()
+                                        .cornerRadius(8)
+                                    Text(localizedString("The Ministry of Education, Culture, Sports, Science and Technology (MEXT) launched the “Tobitate! Study Abroad Initiative” in 2013, a public-private project for promoting overseas study, with the aim of creating the momentum for all young Japanese university and high school students with the motivation and potential to take the first step toward studying abroad.\n\nIn the first stage (from 2013 to 2022), approximately 9,500 students were selected under Tobitate's scholarship program, Tobitate Young Ambassador Program. They experienced diverse practical activities overseas, and were developed as global leaders.\n\nBased on these achievements, we are implementing the second stage (from 2023 to 2027) with a new vision and concept to continue to strengthen efforts for the development of global leaders by encouraging cooperation among industry, government, and academia.\n\nIn the second stage, we introduce a new vision seeking to build a “society where Japanese youth can take on the challenges of the world, collaborate with people domestically and internationally with ‘candor and determination’, and drive innovation and transformation” together with the concept of “challenge, connect, and co-create”.",selectedLanguage: selectedLanguage))
+                                    Link(localizedString("✈️Official HP", selectedLanguage: selectedLanguage), destination: URL(string: "https://tobitate-mext.jasso.go.jp/about/english.html")!)
+                                        .foregroundColor(.blue)
+                                    Link(localizedString("🌊Instagram", selectedLanguage: selectedLanguage), destination: URL(string: "https://www.instagram.com/ryugaku_daizukan/")!)
+                                        .foregroundColor(.blue)
+                                    
+                                }
+                                
+                                // 開発者の説明
+                                Section(header: Text(localizedString("Development", selectedLanguage: selectedLanguage)).font(.headline)) {
+                                    Image("dev_photo")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .clipped()
+                                        .cornerRadius(8)
+                                    Text(localizedString("Developed by Yuki, \nDesigned by SHUHARI team.\n\n✅There may be updates or changes to some content, but these will NOT be automatically reflected in the app unless manually updated by the developer. Some translation tools are utilized.\n\nFeel free to talk to me if you need help.", selectedLanguage: selectedLanguage))
+                                    Link("💻Dev's GitHub", destination: URL(string: "https://github.com/YukiYotsu/ShuHaRi/")!)
+                                        .foregroundColor(.blue)
+                                    Link(localizedString("🐧Dev's Instagram", selectedLanguage: selectedLanguage), destination: URL(string: "https://www.instagram.com/yuki.yotsu/")!)
+                                        .foregroundColor(.blue)
+                                }
+                            }
+                            .navigationTitle(localizedString("Links", selectedLanguage: selectedLanguage))
+                        }
+                        .tabItem {
+                            Image(systemName: "location.fill")
+                            Text(localizedString("Links", selectedLanguage: selectedLanguage))
+                        }
+                    }
+                    .onAppear {
+                        requestNotificationAuthorization()
+                        scheduleNotifications() //
+                    }
+                    .onChange(of: selectedLanguage) { print("Selected language changed to: \(selectedLanguage)") }
+                    
+        }
+        /* =========================================================== */
+        /* iOS 17.0未満 */
+        else {
+            TabView {
+                // Programmeタブ
+                NavigationView {
+                    FloorMapView(roomToExhibit: groupedExhibits)
+                }.tabItem {
+                    Image(systemName: "map")
+                    Text(localizedString("Program", selectedLanguage: selectedLanguage))
+                }
+                
+                // Homeタブ
+                NavigationView {
+                    List {
+                    // カスタムソートを適用
+                    let sortedRooms = groupedExhibits.keys.sorted { room1, room2 in
+                        if room1 == "Networking Lounge" {
+                            return true // "Networking Lounge"を一番上に
+                        }
+                        if room2 == "Networking Lounge" {
+                            return false // 他の部屋より下に
+                        }
+                        return room1 < room2 // 通常のアルファベット順
+                    }
+
+                        ForEach(sortedRooms, id: \.self) { room in
+                            Section(header: Text(room).font(.headline)) {
+                                let exhibits = groupedExhibits[room] ?? []
+                                ForEach(exhibits, id: \.id) { exhibit in
+                                    NavigationLink(destination: ExhibitDetailView(exhibit: exhibit)) {
+                                        ExhibitRowView(exhibit: exhibit)
+                                    }
                                 }
                             }
                         }
-                    }
 
+                    }
+                    .navigationTitle(localizedString("Home", selectedLanguage: selectedLanguage))
+                    .searchable(text: $searchText, prompt: localizedString("Search for exhibits", selectedLanguage: selectedLanguage))
+                    .navigationBarItems(trailing:
+                                        NavigationLink(destination: SettingsView()) {
+                                            Image(systemName: "gear")
+                                                .foregroundColor(.blue)
+                                        }
+                                    )
                 }
-                .navigationTitle(localizedString("Home", selectedLanguage: selectedLanguage))
-                .searchable(text: $searchText, prompt: localizedString("Search for exhibits", selectedLanguage: selectedLanguage))
-                .navigationBarItems(trailing:
-                                    NavigationLink(destination: SettingsView()) {
-                                        Image(systemName: "gear")
-                                            .foregroundColor(.blue)
-                                    }
-                                )
-            }
-            .tabItem {
-                Image(systemName: "house.fill")
-                Text(localizedString("Home", selectedLanguage: selectedLanguage))
-            }
-            
-            // ShuHaRiの説明など
-            // 何度も見ることは想定されないタブ
-            NavigationView{
-                List {
-                    // 守破離の説明
-                    Section(header: Text(localizedString("About SHUHARI", selectedLanguage: selectedLanguage)).font(.headline)) {
-                        Image("shuhari_wide_poster")
-                            .resizable()
-                            .scaledToFit()
-                            .clipped()
-                            .cornerRadius(8)
-                        Image("shuhari_introduction")
-                            .resizable()
-                            .scaledToFit()
-                            .clipped()
-                            .cornerRadius(8)
-                        Text(localizedString("SHUHARI is an event organized by Japanese youth based in Europe, celebrating expression and dialogue. It will take place in May 2025, featuring over 50 creatives, involving a range of workshops, performances, exhibitions, talks, and authentic Japanese food stalls.\nBy holding space for young people to express and share Japanese culture, we aim to deepen intercultural exchange and lay the groundwork for future international business opportunities. The event is held in cooperation with the Japanese-German Center Berlin and the Tobitate! (Leap for Tomorrow) JAPAN Scholarship Program by the Japanese Ministry of Education, Culture, Sports, Science and Technology (MEXT). We are currently seeking sponsorships from companies and organizations that share our vision, through both financial and in-kind support.", selectedLanguage: selectedLanguage))
-                        Link(localizedString("🖼️Official HP",selectedLanguage: selectedLanguage), destination: URL(string: "https://shuhariberlin.github.io/official/")!)
-                            .foregroundColor(.blue)
-                        Link(localizedString("🇩🇪jdzb's Page", selectedLanguage: selectedLanguage), destination: URL(string: "https://jdzb.de/de/veranstaltungen/tobitate-event-shuhari-berlin-festival-2025")!)
-                            .foregroundColor(.blue)
-                        Link(localizedString("🎟️Get Tickets", selectedLanguage: selectedLanguage), destination: URL(string: "https://rausgegangen.de/en/events/shuhari-berlin-festival-2025-1/")!)
-                            .foregroundColor(.blue)
-                        Link(localizedString("🌊Instagram", selectedLanguage: selectedLanguage), destination: URL(string: "https://www.instagram.com/shuhari_berlin/")!)
-                            .foregroundColor(.blue)
-                        
-                    }
-                    
-                    // 日独ベルリンセンターの説明
-                    Section(header: Text("Japanisch-Deutsches Zentrum Berlin").font(.headline)){
-                        Image("jdzb_logo")
-                            .resizable()
-                            .scaledToFit()
-                            .clipped()
-                            .cornerRadius(8)
-                        Text(localizedString("Herzlich willkommen beim Japanisch-Deutschen Zentrum Berlin\nDie gemeinnützige Stiftung hat es sich zur Aufgabe gemacht, den deutsch-japanischen und internationalen Austausch auf den Ebenen von Wirtschaft, Wissenschaft, Kultur, Gesellschaft und Politik zu fördern und zu vertiefen. Damit tragen wir seit 1985 zur politischen und wirtschaftlichen Entwicklung unserer Länder bei. Wir hoffen, Sie bald – physisch oder virtuell – bei uns begrüßen zu können.\n\nExcerpt from the official website.", selectedLanguage: selectedLanguage))
-                        Link(localizedString("🖼️Official HP", selectedLanguage: selectedLanguage), destination: URL(string: "https://jdzb.de/de")!)
-                            .foregroundColor(.blue)
-                        Link(localizedString("📸Instagram", selectedLanguage: selectedLanguage), destination: URL(string: "https://www.instagram.com/jdzb.pr/")!)
-                            .foregroundColor(.blue)
-                    }
-                    
-                    // トビタテの説明
-                    Section(header: Text(localizedString("About Tobitate!", selectedLanguage: selectedLanguage)).font(.headline)) {
-                        Image("tobitate_logo")
-                            .resizable()
-                            .scaledToFit()
-                            .clipped()
-                            .cornerRadius(8)
-                        Text(localizedString("The Ministry of Education, Culture, Sports, Science and Technology (MEXT) launched the “Tobitate! Study Abroad Initiative” in 2013, a public-private project for promoting overseas study, with the aim of creating the momentum for all young Japanese university and high school students with the motivation and potential to take the first step toward studying abroad.\n\nIn the first stage (from 2013 to 2022), approximately 9,500 students were selected under Tobitate's scholarship program, Tobitate Young Ambassador Program. They experienced diverse practical activities overseas, and were developed as global leaders.\n\nBased on these achievements, we are implementing the second stage (from 2023 to 2027) with a new vision and concept to continue to strengthen efforts for the development of global leaders by encouraging cooperation among industry, government, and academia.\n\nIn the second stage, we introduce a new vision seeking to build a “society where Japanese youth can take on the challenges of the world, collaborate with people domestically and internationally with ‘candor and determination’, and drive innovation and transformation” together with the concept of “challenge, connect, and co-create”.",selectedLanguage: selectedLanguage))
-                        Link(localizedString("✈️Official HP", selectedLanguage: selectedLanguage), destination: URL(string: "https://tobitate-mext.jasso.go.jp/about/english.html")!)
-                            .foregroundColor(.blue)
-                        Link(localizedString("🌊Instagram", selectedLanguage: selectedLanguage), destination: URL(string: "https://www.instagram.com/ryugaku_daizukan/")!)
-                            .foregroundColor(.blue)
-                        
-                    }
-                    
-                    // 開発者の説明
-                    Section(header: Text(localizedString("Development", selectedLanguage: selectedLanguage)).font(.headline)) {
-                        Image("dev_photo")
-                            .resizable()
-                            .scaledToFit()
-                            .clipped()
-                            .cornerRadius(8)
-                        Text(localizedString("Developed by Yuki, \nDesigned by SHUHARI team.\n\n✅There may be updates or changes to some content, but these will NOT be automatically reflected in the app unless manually updated by the developer. Some translation tools are utilized.\n\nFeel free to talk to me if you need help.", selectedLanguage: selectedLanguage))
-                        Link("💻Dev's GitHub", destination: URL(string: "https://github.com/YukiYotsu/ShuHaRi/")!)
-                            .foregroundColor(.blue)
-                        Link(localizedString("🐧Dev's Instagram", selectedLanguage: selectedLanguage), destination: URL(string: "https://www.instagram.com/yuki.yotsu/")!)
-                            .foregroundColor(.blue)
-                    }
+                .tabItem {
+                    Image(systemName: "house.fill")
+                    Text(localizedString("Home", selectedLanguage: selectedLanguage))
                 }
-                .navigationTitle(localizedString("Links", selectedLanguage: selectedLanguage))
+                
+                // ShuHaRiの説明など
+                // 何度も見ることは想定されないタブ
+                NavigationView{
+                    List {
+                        // 守破離の説明
+                        Section(header: Text(localizedString("About SHUHARI", selectedLanguage: selectedLanguage)).font(.headline)) {
+                            Image("shuhari_wide_poster")
+                                .resizable()
+                                .scaledToFit()
+                                .clipped()
+                                .cornerRadius(8)
+                            Image("shuhari_introduction")
+                                .resizable()
+                                .scaledToFit()
+                                .clipped()
+                                .cornerRadius(8)
+                            Text(localizedString("SHUHARI is an event organized by Japanese youth based in Europe, celebrating expression and dialogue. It will take place in May 2025, featuring over 50 creatives, involving a range of workshops, performances, exhibitions, talks, and authentic Japanese food stalls.\nBy holding space for young people to express and share Japanese culture, we aim to deepen intercultural exchange and lay the groundwork for future international business opportunities. The event is held in cooperation with the Japanese-German Center Berlin and the Tobitate! (Leap for Tomorrow) JAPAN Scholarship Program by the Japanese Ministry of Education, Culture, Sports, Science and Technology (MEXT). We are currently seeking sponsorships from companies and organizations that share our vision, through both financial and in-kind support.", selectedLanguage: selectedLanguage))
+                            Link(localizedString("🖼️Official HP",selectedLanguage: selectedLanguage), destination: URL(string: "https://shuhariberlin.github.io/official/")!)
+                                .foregroundColor(.blue)
+                            Link(localizedString("🇩🇪jdzb's Page", selectedLanguage: selectedLanguage), destination: URL(string: "https://jdzb.de/de/veranstaltungen/tobitate-event-shuhari-berlin-festival-2025")!)
+                                .foregroundColor(.blue)
+                            Link(localizedString("🎟️Get Tickets", selectedLanguage: selectedLanguage), destination: URL(string: "https://rausgegangen.de/en/events/shuhari-berlin-festival-2025-1/")!)
+                                .foregroundColor(.blue)
+                            Link(localizedString("🌊Instagram", selectedLanguage: selectedLanguage), destination: URL(string: "https://www.instagram.com/shuhari_berlin/")!)
+                                .foregroundColor(.blue)
+                            
+                        }
+                        
+                        // 日独ベルリンセンターの説明
+                        Section(header: Text("Japanisch-Deutsches Zentrum Berlin").font(.headline)){
+                            Image("jdzb_logo")
+                                .resizable()
+                                .scaledToFit()
+                                .clipped()
+                                .cornerRadius(8)
+                            Text(localizedString("Herzlich willkommen beim Japanisch-Deutschen Zentrum Berlin\nDie gemeinnützige Stiftung hat es sich zur Aufgabe gemacht, den deutsch-japanischen und internationalen Austausch auf den Ebenen von Wirtschaft, Wissenschaft, Kultur, Gesellschaft und Politik zu fördern und zu vertiefen. Damit tragen wir seit 1985 zur politischen und wirtschaftlichen Entwicklung unserer Länder bei. Wir hoffen, Sie bald – physisch oder virtuell – bei uns begrüßen zu können.\n\nExcerpt from the official website.", selectedLanguage: selectedLanguage))
+                            Link(localizedString("🖼️Official HP", selectedLanguage: selectedLanguage), destination: URL(string: "https://jdzb.de/de")!)
+                                .foregroundColor(.blue)
+                            Link(localizedString("📸Instagram", selectedLanguage: selectedLanguage), destination: URL(string: "https://www.instagram.com/jdzb.pr/")!)
+                                .foregroundColor(.blue)
+                        }
+                        
+                        // トビタテの説明
+                        Section(header: Text(localizedString("About Tobitate!", selectedLanguage: selectedLanguage)).font(.headline)) {
+                            Image("tobitate_logo")
+                                .resizable()
+                                .scaledToFit()
+                                .clipped()
+                                .cornerRadius(8)
+                            Text(localizedString("The Ministry of Education, Culture, Sports, Science and Technology (MEXT) launched the “Tobitate! Study Abroad Initiative” in 2013, a public-private project for promoting overseas study, with the aim of creating the momentum for all young Japanese university and high school students with the motivation and potential to take the first step toward studying abroad.\n\nIn the first stage (from 2013 to 2022), approximately 9,500 students were selected under Tobitate's scholarship program, Tobitate Young Ambassador Program. They experienced diverse practical activities overseas, and were developed as global leaders.\n\nBased on these achievements, we are implementing the second stage (from 2023 to 2027) with a new vision and concept to continue to strengthen efforts for the development of global leaders by encouraging cooperation among industry, government, and academia.\n\nIn the second stage, we introduce a new vision seeking to build a “society where Japanese youth can take on the challenges of the world, collaborate with people domestically and internationally with ‘candor and determination’, and drive innovation and transformation” together with the concept of “challenge, connect, and co-create”.",selectedLanguage: selectedLanguage))
+                            Link(localizedString("✈️Official HP", selectedLanguage: selectedLanguage), destination: URL(string: "https://tobitate-mext.jasso.go.jp/about/english.html")!)
+                                .foregroundColor(.blue)
+                            Link(localizedString("🌊Instagram", selectedLanguage: selectedLanguage), destination: URL(string: "https://www.instagram.com/ryugaku_daizukan/")!)
+                                .foregroundColor(.blue)
+                            
+                        }
+                        
+                        // 開発者の説明
+                        Section(header: Text(localizedString("Development", selectedLanguage: selectedLanguage)).font(.headline)) {
+                            Image("dev_photo")
+                                .resizable()
+                                .scaledToFit()
+                                .clipped()
+                                .cornerRadius(8)
+                            Text(localizedString("Developed by Yuki, \nDesigned by SHUHARI team.\n\n✅There may be updates or changes to some content, but these will NOT be automatically reflected in the app unless manually updated by the developer. Some translation tools are utilized.\n\nFeel free to talk to me if you need help.", selectedLanguage: selectedLanguage))
+                            Link("💻Dev's GitHub", destination: URL(string: "https://github.com/YukiYotsu/ShuHaRi/")!)
+                                .foregroundColor(.blue)
+                            Link(localizedString("🐧Dev's Instagram", selectedLanguage: selectedLanguage), destination: URL(string: "https://www.instagram.com/yuki.yotsu/")!)
+                                .foregroundColor(.blue)
+                        }
+                    }
+                    .navigationTitle(localizedString("Links", selectedLanguage: selectedLanguage))
+                }
+                .tabItem {
+                    Image(systemName: "location.fill")
+                    Text(localizedString("Links", selectedLanguage: selectedLanguage))
+                }
             }
-            .tabItem {
-                Image(systemName: "location.fill")
-                Text(localizedString("Links", selectedLanguage: selectedLanguage))
+            .onAppear {
+                requestNotificationAuthorization()
+                scheduleNotifications() //
             }
+            // iOS16流の書き方
+            .onChange(of: selectedLanguage, perform: { newValue in
+                print("Selected language changed to: \(newValue)")
+            })
         }
-        .onAppear {
-            requestNotificationAuthorization()
-            scheduleNotifications() //
-        }
-        .onChange(of: selectedLanguage) { print("Selected language changed to: \(selectedLanguage)") }
         
+
     }
     
     // 色変更関数
@@ -585,18 +729,36 @@ struct FloorMapView: View {
         NavigationStack {
             VStack {
                 HStack {
-                    Toggle("Exhibits", isOn: $showExhibits)
-                        .onChange(of: showExhibits){ newValue in
-                            if newValue {
-                                showRoomnames = false
+                    /* バージョンによりプログラムが異なるためバージョン分岐 */
+                    if #available(iOS 17.0, *) {
+                        Toggle("Exhibits", isOn: $showExhibits)
+                            .onChange(of: showExhibits){ newValue in
+                                if newValue {
+                                    showRoomnames = false
+                                }
                             }
-                        }
-                    Toggle("Roomnames", isOn: $showRoomnames)
-                        .onChange(of: showRoomnames) { newValue in
-                            if newValue {
-                                showExhibits = false
+                        Toggle("Roomnames", isOn: $showRoomnames)
+                            .onChange(of: showRoomnames) { newValue in
+                                if newValue {
+                                    showExhibits = false
+                                }
                             }
-                        }
+                    } else {
+                        // iOS16流の書き方
+                        Toggle("Exhibits", isOn: $showExhibits)
+                            .onChange(of: showExhibits, perform: { newValue in
+                                if newValue {
+                                    showRoomnames = false
+                                }
+                            })
+                        // iOS16流の書き方
+                        Toggle("Roomnames", isOn: $showRoomnames)
+                            .onChange(of: showRoomnames, perform: { newValue in
+                                if newValue {
+                                    showExhibits = false
+                                }
+                            })
+                    }
                 }
                 .padding()
 
