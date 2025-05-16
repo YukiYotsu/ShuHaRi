@@ -230,36 +230,17 @@ struct ContentView: View {
                     return room1 < room2 // 通常のアルファベット順
                 }
 
-                    ForEach(sortedRooms, id: \.self){ room in
+                    ForEach(sortedRooms, id: \.self) { room in
                         Section(header: Text(room).font(.headline)) {
                             let exhibits = groupedExhibits[room] ?? []
-                            
                             ForEach(exhibits, id: \.id) { exhibit in
                                 NavigationLink(destination: ExhibitDetailView(exhibit: exhibit)) {
-                                    HStack {
-                                        Image(exhibit.imageName)
-                                            .resizable()
-                                            .scaledToFit()
-                                            .frame(width: 60, height: 80)
-                                            .clipped()
-                                            .cornerRadius(8)
-                                        VStack(alignment: .leading) {
-                                            Text(exhibit.name)
-                                                .font(.headline)
-                                            Text(exhibit.exhibitor)
-                                                .font(.subheadline)
-                                                .foregroundColor(.secondary)
-                                            if !exhibit.startTime.isEmpty {
-                                                Text(exhibit.startTime)
-                                                    .foregroundColor(colorForTime(exhibit.startTime, exhibit.endTime))
-                                            }
-                                        }
-                                    }
-                                    .padding(.vertical, 4)
+                                    ExhibitRowView(exhibit: exhibit)
                                 }
                             }
                         }
                     }
+
                 }
                 .navigationTitle(localizedString("Home", selectedLanguage: selectedLanguage))
                 .searchable(text: $searchText, prompt: localizedString("Search for exhibits", selectedLanguage: selectedLanguage))
@@ -279,7 +260,6 @@ struct ContentView: View {
             // 何度も見ることは想定されないタブ
             NavigationView{
                 List {
-                    /* TO-DO ここら辺は日本語訳・ドイツ語訳を準備しておくと良い。*/
                     // 守破離の説明
                     Section(header: Text(localizedString("About SHUHARI", selectedLanguage: selectedLanguage)).font(.headline)) {
                         Image("shuhari_wide_poster")
@@ -797,6 +777,47 @@ struct ZoomableImageView: View {
             }
             .padding()
         }
+    }
+}
+
+struct ExhibitRowView: View {
+    let exhibit: Exhibit
+
+    var body: some View {
+        HStack {
+            Image(exhibit.imageName)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 60, height: 80)
+                .clipped()
+                .cornerRadius(8)
+            VStack(alignment: .leading) {
+                Text(exhibit.name)
+                    .font(.headline)
+                Text(exhibit.exhibitor)
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                if !exhibit.startTime.isEmpty {
+                    Text(exhibit.startTime)
+                        .foregroundColor(colorForTime(exhibit.startTime, exhibit.endTime))
+                }
+            }
+        }
+        .padding(.vertical, 4)
+    }
+
+    func colorForTime(_ startTime: String, _ endTime: String) -> Color {
+        // 必要であればこの関数を再利用、または外部に出す
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm"
+        guard let start = formatter.date(from: startTime),
+              let end = formatter.date(from: endTime) else {
+            return .primary
+        }
+        let now = Date()
+        if now > end { return .red }
+        else if now > start { return .orange }
+        else { return .green }
     }
 }
 
