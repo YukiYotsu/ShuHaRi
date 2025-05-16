@@ -180,7 +180,6 @@ func localizedString(_ key: String, selectedLanguage: String) -> String {
 // ContentView本体
 struct ContentView: View {
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "🇯🇵日本語"
-    @AppStorage("day_Notification") private var dayNotification: String = "Only 24 May"
     @State private var searchText: String = ""
     
     // 例としてのroomToExhibitの作成
@@ -419,19 +418,14 @@ struct ContentView: View {
 
     // for文で中身をひとつずつ取り出す
     func scheduleNotifications() {
-        var here_date = 16 // 関数内での通知設定が正常か見るためのフラグ
         for notification in notifications {
             var dateComponents = DateComponents()
             dateComponents.hour = notification.hour
             dateComponents.minute = notification.minute
-
-            if dayNotification == "Only 24 May" {
-                dateComponents.month = 5
-                dateComponents.day = 24
-                here_date = 24 // 24日だけ通知できるようにしているか
-            }else{
-                here_date = 16
-            }
+            
+            /* 日付設定 */
+            dateComponents.month = 5
+            dateComponents.day = 24
 
             let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
 
@@ -450,7 +444,7 @@ struct ContentView: View {
                 if let error = error {
                     print("Error scheduling notification: \(error.localizedDescription)")
                 } else {
-                    print("Notification scheduled for \(here_date) at \(notification.hour):\(notification.minute)")
+                    print("Notification scheduled for \(String(describing: dateComponents.day)) at \(notification.hour):\(notification.minute)")
                 }
             }
         }
@@ -461,10 +455,8 @@ struct ContentView: View {
 
 struct SettingsView: View {
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "🇯🇵日本語"
-    @AppStorage("day_notification") private var dayNotification: String = "Only 24 May"
 
     let languages = ["🇯🇵日本語", "🇩🇪Deutsch", "🇬🇧English"]
-    let days_notification = ["Only 24 May", "Everyday"]
 
     var body: some View {
         Form {
@@ -479,19 +471,6 @@ struct SettingsView: View {
                 Text(localizedString("Only specific parts will be applied. Exhibit content will remain untranslated to prevent mistranslation.", selectedLanguage: selectedLanguage))
                     .padding([.horizontal])
                     .foregroundColor(.secondary)
-            }
-            // 通知設定（開発者向けツール）
-            Section(header: Text(localizedString("When you receive notifications", selectedLanguage: selectedLanguage))) {
-                Picker("当日通知", selection: $dayNotification){
-                    ForEach(days_notification, id:\.self) { day in
-                        Text(day).tag(day)
-                    }
-                }
-                .pickerStyle(SegmentedPickerStyle())
-                Text(localizedString("Developers tool. You can set the day on which you want to receive notifications.", selectedLanguage: selectedLanguage))
-                    .padding([.horizontal])
-                    .foregroundColor(.secondary)
-                
             }
 
             // 出展の通知スケジュール
