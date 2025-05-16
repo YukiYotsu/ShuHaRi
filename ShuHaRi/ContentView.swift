@@ -338,7 +338,9 @@ struct ContentView: View {
             requestNotificationAuthorization()
             scheduleNotifications() //
         }
-        .onChange(of: selectedLanguage) { print("Selected language changed to: \(selectedLanguage)") }
+        .onChange(of: selectedLanguage, perform: { newValue in
+            print("Selected language changed to: \(newValue)")
+        })
         
     }
     
@@ -586,17 +588,19 @@ struct FloorMapView: View {
             VStack {
                 HStack {
                     Toggle("Exhibits", isOn: $showExhibits)
-                        .onChange(of: showExhibits){ newValue in
+                        .onChange(of: showExhibits, perform: { newValue in
                             if newValue {
                                 showRoomnames = false
                             }
-                        }
+                        })
+
                     Toggle("Roomnames", isOn: $showRoomnames)
-                        .onChange(of: showRoomnames) { newValue in
+                        .onChange(of: showRoomnames, perform: { newValue in
                             if newValue {
                                 showExhibits = false
                             }
-                        }
+                        })
+
                 }
                 .padding()
 
