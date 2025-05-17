@@ -1,8 +1,12 @@
 # 👋 Moi!
 I'm Yuki Yotsumoto. This is the README markdown for the App of 守破離（ShuHaRi） Project in 2025.  
 
-*Last modified: 16.05.2025*
+*Last modified: 17.05.2025*
 
+# 🌍 Our websites
+**Official HomePage** https://shuhariberlin.github.io/official/  
+**Official Instagram** https://www.instagram.com/shuhari_berlin/  
+**Official Facebook** https://www.facebook.com/profile.php?id=61574783611038  
 # 🥋 What is SHUHARI?
 SHUHARI is an event organized by Japanese youth based in Europe,
 celebrating expression and dialogue. It will take place in May 2025, featuring
@@ -25,3 +29,7 @@ our vision, through both financial and in-kind support.
 
 # ☺️ Future
 - Send pictures and reports via App, which would be really happy experience even if the event comes to the end.
+
+# 📣We're Supported by
+- **JDZB**(Japanisch-Deutsches Zentrum Berlin ベルリン日独センター Japanese-German Center Berlin)
+- **Tobitate! Youth Ambassador Program** by Japan's Ministry of Education,Culture,Sports,Science and Technology.
