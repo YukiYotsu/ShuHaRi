@@ -33,3 +33,5 @@ our vision, through both financial and in-kind support.
 # 📣We're Supported by
 - **JDZB**(Japanisch-Deutsches Zentrum Berlin ベルリン日独センター Japanese-German Center Berlin)
 - **Tobitate! Youth Ambassador Program** by Japan's Ministry of Education,Culture,Sports,Science and Technology.
+<img width="274" alt="スクリーンショット 2025-05-13 20 45 39" src="https://github.com/user-attachments/assets/1c3993cb-c44e-45ed-8c42-306111f91865" />  
+<img width="239" alt="スクリーンショット 2025-05-13 20 45 53" src="https://github.com/user-attachments/assets/63693f44-d9d7-4766-a4de-9babfc9fabce" />
