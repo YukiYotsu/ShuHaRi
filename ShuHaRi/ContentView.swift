@@ -54,7 +54,7 @@ let exhibits = [
     Exhibit(name: "Ocho25 Recycle x Skateboard x Art:", exhibitor: "Kiki", description: "Recycling skateboards and turning them into art pieces.", tag1: "recycle", tag2: "skateboard", tag3: "art", imageName: "10_ocho25_recycle", startTime: "", endTime: "", roomname: "foyer"),
     
     // What does the museum in Berlin want to tell us?
-    Exhibit(name: "What does the museum in Berlin want to tell us?", exhibitor: "Honomi Kitaura", description: "Berlin has many museums. And each one of them has a message for us. What do they want to tell us? Through Berlin's museums, we will consider what museums should be.", tag1: "museology", tag2: "expression", tag3: "message", imageName: "11_berlin_museums", startTime: "", endTime: "", roomname: "Meeting Room1"),
+//    Exhibit(name: "What does the museum in Berlin want to tell us?", exhibitor: "Honomi Kitaura", description: "Berlin has many museums. And each one of them has a message for us. What do they want to tell us? Through Berlin's museums, we will consider what museums should be.", tag1: "museology", tag2: "expression", tag3: "message", imageName: "11_berlin_museums", startTime: "", endTime: "", roomname: "Meeting Room1"),
     
     // The Pointe of Us
     Exhibit(name: "The Pointe of Us", exhibitor: "Karen Suzuki", description: "A ballet dancer is more than a performer-they express and connect with the world through their body. This project highlights each dancer's passion for ballet and their personal story of living as a dancer. Through their movements and words, we explore how they define themselves and what it means to live through dance. This is a place for all aspirational dancers-for everyone who", tag1: "aspirational dancers", tag2: "identity", tag3: "ballet", imageName: "12_the_pointe_of_us", startTime: "", endTime: "", roomname: "Meeting Room2"),
@@ -109,7 +109,7 @@ let exhibits = [
     Exhibit(name: "月面/moon", exhibitor: "Aoi", description: "There are moments when I realise that I am standing in a place that is familiar but new to me, and yet unique. \n\nThe memory of that experience is like the moon, shining and floating in a far-off corner of our minds. \n\nThis is an exhibit of photographs documenting them.", tag1: "place", tag2: "memory", tag3: "photograph", imageName: "26_moon", startTime: "", endTime: "", roomname: "foyer"),
     
     // Sky Jazz (Tiny Theater)
-    Exhibit(name: "Tiny Theater -- SKY JAZZ: First Flight-日独LIVE", exhibitor: "Cameron Soesbe", description: "ON 'n' OFF line live performance featuring Acrostic band with singing and dancing in English. Blending Japanese and German inspiration. Ex: JP×DE hit song mash-up.", tag1: "performing", tag2: "borrowedscenery", tag3: "culture collaboration", imageName: "28_sky_jazz", startTime: "15:30", endTime: "15:45", roomname: "Courtyard"),
+    Exhibit(name: "Tiny Theater -- SKY JAZZ: First Flight-日独LIVE", exhibitor: "Cameron Soesbe", description: "ON 'n' OFF line live performance featuring Acrostic band with singing and dancing in English. Blending Japanese and German inspiration. Ex: JP×DE hit song mash-up.", tag1: "performing", tag2: "borrowedscenery", tag3: "culture collaboration", imageName: "28_sky_jazz", startTime: "", endTime: "", roomname: "Courtyard"),
     
     // From Feeling stuck to the Next Step — Let’s find a Way Together
     Exhibit(name: "Next Step Together", exhibitor: "Ai Ishida", description: "From Feeling stuck to the Next Step -- Let's find a Way Together \nStart 11:30, 15:30 \nEnd 13:00, 17:00 \n\nThe topic of immigration and refugees is attracting growing attention from many people — and we are among them. \n\nHowever, because it is such a complex issue, it often feels difficult to engage with or to make progress in our thinking. \n\nStill, we cannot turn a blind eye to the problems happening right now. We want to step out of our own isolated worlds to take action. What are others thinking? Have they already formed a clear stance? Or are they also not sure? \n\nBy creating opportunities for interaction with many people, we hope this project can help each of us find an opening from our current sense of uncertainty toward the next step forward.", tag1: "open dialogue", tag2: "immigrant", tag3: "refugee", imageName: "29_next_step_together", startTime: "11:30", endTime: "17:00", roomname: "Information Lounge"),
@@ -153,7 +153,7 @@ let notifications = [
     Notification(title: "Takoyaki", body: "Closes in 10 minutes", hour: 16, minute: 20), // 終了通知を10分前に
     Notification(title: "Takibi Storytelling❶", body: "Sara is speaking at 📍Courtyard", hour: 10, minute: 40), // 5分前
     Notification(title: "Takibi Storytelling❷", body: "Sara is speaking at 📍Courtyard", hour: 15, minute: 55), // 5分前
-    Notification(title: "🎧Tiny theater", body: "Let's listen to Sky Jazz at 📍Courtyard", hour: 15, minute: 25), // 5分前
+    // Notification(title: "🎧Tiny theater", body: "Let's listen to Sky Jazz at 📍Courtyard", hour: 15, minute: 25), // 5分前
     Notification(title: "🥋Physical Performance Talkshow", body: "Talkshow at 📍Courtyard", hour: 16, minute: 55), // 5分前
     Notification(title: "📚Next Step Together❶", body: "Join discussion at 📍Information Lounge", hour: 11, minute: 20), // 10分前
     Notification(title: "📚Next Step Together❷", body: "Join discussion at 📍Information Lounge", hour: 15, minute: 20), // 10分前
@@ -269,11 +269,20 @@ struct ContentView: View {
                                         .scaledToFit()
                                         .clipped()
                                         .cornerRadius(8)
-                                    Image("shuhari_introduction")
-                                        .resizable()
-                                        .scaledToFit()
-                                        .clipped()
-                                        .cornerRadius(8)
+                                    if selectedLanguage == "🇯🇵日本語"{
+                                        Image("JP_shuhari_introduction")
+                                            .resizable()
+                                            .scaledToFit()
+                                            .clipped()
+                                            .cornerRadius(8)
+                                    } else {
+                                        Image("EN_shuhari_introduction")
+                                            .resizable()
+                                            .scaledToFit()
+                                            .clipped()
+                                            .cornerRadius(8)
+                                    }//"🇯🇵日本語", "🇩🇪Deutsch", "🇬🇧English"]
+                                    
                                     Text(localizedString("SHUHARI is an event organized by Japanese youth based in Europe, celebrating expression and dialogue. It will take place in May 2025, featuring over 50 creatives, involving a range of workshops, performances, exhibitions, talks, and authentic Japanese food stalls.\nBy holding space for young people to express and share Japanese culture, we aim to deepen intercultural exchange and lay the groundwork for future international business opportunities. The event is held in cooperation with the Japanese-German Center Berlin and the Tobitate! (Leap for Tomorrow) JAPAN Scholarship Program by the Japanese Ministry of Education, Culture, Sports, Science and Technology (MEXT). We are currently seeking sponsorships from companies and organizations that share our vision, through both financial and in-kind support.", selectedLanguage: selectedLanguage))
                                     Link(localizedString("🖼️Official HP",selectedLanguage: selectedLanguage), destination: URL(string: "https://shuhariberlin.github.io/official/")!)
                                         .foregroundColor(.blue)
@@ -317,11 +326,11 @@ struct ContentView: View {
                                 
                                 // 開発者の説明
                                 Section(header: Text(localizedString("Development", selectedLanguage: selectedLanguage)).font(.headline)) {
-                                    Image("dev_photo")
-                                        .resizable()
-                                        .scaledToFit()
-                                        .clipped()
-                                        .cornerRadius(8)
+//                                    Image("dev_photo")
+//                                        .resizable()
+//                                        .scaledToFit()
+//                                        .clipped()
+//                                        .cornerRadius(8)
                                     Text(localizedString("Developed by Yuki, \nDesigned by SHUHARI team.\n\n✅There may be updates or changes to some content, but these will NOT be automatically reflected in the app unless manually updated by the developer. Some translation tools are utilized.\n\nFeel free to talk to me if you need help.", selectedLanguage: selectedLanguage))
                                     Link("💻Dev's GitHub", destination: URL(string: "https://github.com/YukiYotsu/ShuHaRi/")!)
                                         .foregroundColor(.blue)
@@ -454,11 +463,11 @@ struct ContentView: View {
                         
                         // 開発者の説明
                         Section(header: Text(localizedString("Development", selectedLanguage: selectedLanguage)).font(.headline)) {
-                            Image("dev_photo")
-                                .resizable()
-                                .scaledToFit()
-                                .clipped()
-                                .cornerRadius(8)
+//                            Image("dev_photo")
+//                                .resizable()
+//                                .scaledToFit()
+//                                .clipped()
+//                                .cornerRadius(8)
                             Text(localizedString("Developed by Yuki, \nDesigned by SHUHARI team.\n\n✅There may be updates or changes to some content, but these will NOT be automatically reflected in the app unless manually updated by the developer. Some translation tools are utilized.\n\nFeel free to talk to me if you need help.", selectedLanguage: selectedLanguage))
                             Link("💻Dev's GitHub", destination: URL(string: "https://github.com/YukiYotsu/ShuHaRi/")!)
                                 .foregroundColor(.blue)
@@ -728,76 +737,15 @@ struct FloorMapView: View {
     var body: some View {
         NavigationStack {
             VStack {
-                HStack {
-                    /* バージョンによりプログラムが異なるためバージョン分岐 */
-                    if #available(iOS 17.0, *) {
-                        Toggle("Exhibits", isOn: $showExhibits)
-                            .onChange(of: showExhibits){ newValue in
-                                if newValue {
-                                    showRoomnames = false
-                                }
-                            }
-                        Toggle("Roomnames", isOn: $showRoomnames)
-                            .onChange(of: showRoomnames) { newValue in
-                                if newValue {
-                                    showExhibits = false
-                                }
-                            }
-                    } else {
-                        // iOS16流の書き方
-                        Toggle("Exhibits", isOn: $showExhibits)
-                            .onChange(of: showExhibits, perform: { newValue in
-                                if newValue {
-                                    showRoomnames = false
-                                }
-                            })
-                        // iOS16流の書き方
-                        Toggle("Roomnames", isOn: $showRoomnames)
-                            .onChange(of: showRoomnames, perform: { newValue in
-                                if newValue {
-                                    showExhibits = false
-                                }
-                            })
-                    }
-                }
-                .padding()
-
                 GeometryReader { geo in
                     ZStack {
-                        Image("floor_map_base")
-                            .resizable()
-                            .scaledToFit()
-//                            .frame(width: geo.size.width)
-                            .scaleEffect(scale)
-                            .offset(offset)
-                            .gesture(
-                                SimultaneousGesture(
-                                    MagnificationGesture()
-                                        .onChanged { value in
-                                            scale = lastScale * value
-                                        }
-                                        .onEnded { _ in
-                                            lastScale = scale
-                                        },
-                                    DragGesture()
-                                        .onChanged { gesture in
-                                            offset = CGSize(
-                                                width: lastOffset.width + gesture.translation.width,
-                                                height: lastOffset.height + gesture.translation.height
-                                            )
-                                        }
-                                        .onEnded { _ in
-                                            lastOffset = offset
-                                        }
-                                )
-                            )
-
-
-                        if showExhibits {
-                            Image("layer_exhibits")
+                        VStack {
+                            Spacer()
+                            Image("high_quality_map")
                                 .resizable()
                                 .scaledToFit()
                                 .scaleEffect(scale)
+                            
                                 .offset(offset)
                                 .gesture(
                                     SimultaneousGesture(
@@ -820,38 +768,7 @@ struct FloorMapView: View {
                                             }
                                     )
                                 )
-
-                        }
-
-                        if showRoomnames {
-                            Image("layer_roomnames")
-                                .resizable()
-                                .scaledToFit()
-//                                .frame(width:
-                                .scaleEffect(scale)
-                                .offset(offset)
-                                .gesture(
-                                    SimultaneousGesture(
-                                        MagnificationGesture()
-                                            .onChanged { value in
-                                                scale = lastScale * value
-                                            }
-                                            .onEnded { _ in
-                                                lastScale = scale
-                                            },
-                                        DragGesture()
-                                            .onChanged { gesture in
-                                                offset = CGSize(
-                                                    width: lastOffset.width + gesture.translation.width,
-                                                    height: lastOffset.height + gesture.translation.height
-                                                )
-                                            }
-                                            .onEnded { _ in
-                                                lastOffset = offset
-                                            }
-                                    )
-                                )
-
+                            Spacer()
                         }
                     }
                 }
