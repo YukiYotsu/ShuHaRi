@@ -25,7 +25,7 @@ our vision, through both financial and in-kind support.
 *Designed by ShuHaRi Team.*
 *Developed by Yuki.*
 
-# 📍 Todo
+# 📍 Todo (Updated in Oct!)
 - Make this App dramatic retrospective work...
 
 # ☺️ Future
