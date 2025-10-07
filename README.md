@@ -1,7 +1,7 @@
 # 👋 Moi!
 I'm Yuki Yotsumoto. This is the README markdown for the App of 守破離（ShuHaRi） Project in 2025.  
 
-*Last modified: 17.05.2025*
+*Last modified: 07.10.2025*
 
 # 🌍 Our websites
 **Official HomePage** https://shuhariberlin.github.io/official/  
@@ -26,7 +26,7 @@ our vision, through both financial and in-kind support.
 *Developed by Yuki.*
 
 # 📍 Todo
-- Add photo assets sets **which has not been uploaded yet**.
+- Make this App dramatic retrospective work...
 
 # ☺️ Future
 - Send pictures and reports via App, which would be really happy experience even if the event comes to the end.
